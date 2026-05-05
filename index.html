@@ -23,7 +23,6 @@
       background: rgba(255,255,255,0.1);
       backdrop-filter: blur(15px);
       box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-      transition: transform 0.2s ease;
     }
 
     h2 { text-align: center; }
@@ -42,10 +41,7 @@
       border: none;
       cursor: pointer;
       margin: 5px;
-      transition: 0.2s;
     }
-
-    button:hover { transform: scale(1.05); }
 
     .add-btn { background: #2ecc71; }
     .delete-btn { background: #e74c3c; color: white; }
@@ -66,25 +62,23 @@
 
     td, th { padding: 10px; }
 
-    tr:hover { background: rgba(255,255,255,0.1); }
-
     #dashboard { display: none; }
   </style>
 </head>
 
 <body>
 
-<div class="card" id="card">
+<div class="card">
 
   <!-- LOGIN -->
   <div id="loginBox">
     <h2>🔐 Login</h2>
     <input id="username" placeholder="Username">
     <input id="password" type="password" placeholder="Password"><br>
+
     <button onclick="login()">Login</button>
     <button onclick="register()">Register</button><br>
 
-    <!-- 🔴 GOOGLE BUTTON -->
     <button class="google-btn" onclick="googleLogin()">
       <i class="fa-brands fa-google"></i> Login with Google
     </button>
@@ -92,7 +86,7 @@
 
   <!-- DASHBOARD -->
   <div id="dashboard">
-    <h2>🚀 3D User Dashboard</h2>
+    <h2>🚀 Dashboard</h2>
 
     <button onclick="logout()" style="float:right;background:#555;">Logout</button>
 
@@ -124,7 +118,9 @@ const USER_API = API + "/users";
 
 let TOKEN = "";
 
-// 🔐 CHECK TOKEN FROM URL (Google login)
+/* ===========================
+   🔐 HANDLE GOOGLE REDIRECT
+=========================== */
 const params = new URLSearchParams(window.location.search);
 const urlToken = params.get("token");
 
@@ -133,16 +129,22 @@ if (urlToken) {
   window.history.replaceState({}, document.title, "/");
 }
 
-// 🔐 LOAD TOKEN
+/* ===========================
+   🔐 LOAD TOKEN
+=========================== */
 TOKEN = localStorage.getItem("token") || "";
 
-// 🔐 AUTO LOGIN
+/* ===========================
+   🔐 AUTO LOGIN
+=========================== */
 if (TOKEN) {
-  loginBox.style.display = "none";
-  dashboard.style.display = "block";
+  document.getElementById("loginBox").style.display = "none";
+  document.getElementById("dashboard").style.display = "block";
 }
 
-// 🔐 REGISTER
+/* ===========================
+   REGISTER
+=========================== */
 function register() {
   fetch(API + "/register", {
     method: "POST",
@@ -154,7 +156,9 @@ function register() {
   }).then(() => alert("Registered"));
 }
 
-// 🔐 LOGIN (normal)
+/* ===========================
+   NORMAL LOGIN
+=========================== */
 function login() {
   fetch(API + "/login", {
     method: "POST",
@@ -170,31 +174,35 @@ function login() {
       TOKEN = data.token;
       localStorage.setItem("token", TOKEN);
 
-      loginBox.style.display = "none";
-      dashboard.style.display = "block";
+      document.getElementById("loginBox").style.display = "none";
+      document.getElementById("dashboard").style.display = "block";
     } else {
       alert("Invalid login");
     }
   });
 }
 
-// 🔐 GOOGLE LOGIN
+/* ===========================
+   GOOGLE LOGIN
+=========================== */
 function googleLogin() {
   window.location.href = API + "/google_login";
 }
 
-// 🔐 LOGOUT
+/* ===========================
+   LOGOUT
+=========================== */
 function logout() {
   localStorage.removeItem("token");
   location.reload();
 }
 
-// USERS
+/* ===========================
+   USERS API
+=========================== */
 function loadUsers() {
   fetch(USER_API, {
-    headers: {
-      "Authorization": "Bearer " + TOKEN
-    }
+    headers: { "Authorization": "Bearer " + TOKEN }
   })
   .then(res => res.json())
   .then(data => renderUsers(data));
@@ -208,16 +216,12 @@ function renderUsers(data) {
       <td>${u.name}</td>
       <td>${u.email}</td>
       <td>
-        <button class="delete-btn" onclick="deleteUser(${u.id})">
-          <i class="fa fa-trash"></i>
-        </button>
-        <button class="edit-btn" onclick="editUser(${u.id}, '${u.name}', '${u.email}')">
-          <i class="fa fa-edit"></i>
-        </button>
+        <button onclick="deleteUser(${u.id})">❌</button>
+        <button onclick="editUser(${u.id}, '${u.name}', '${u.email}')">✏️</button>
       </td>
     </tr>`;
   });
-  userList.innerHTML = rows;
+  document.getElementById("userList").innerHTML = rows;
 }
 
 function addUser() {
@@ -237,9 +241,7 @@ function addUser() {
 function deleteUser(id) {
   fetch(USER_API + "/" + id, {
     method: "DELETE",
-    headers: {
-      "Authorization": "Bearer " + TOKEN
-    }
+    headers: { "Authorization": "Bearer " + TOKEN }
   }).then(loadUsers);
 }
 
@@ -256,14 +258,6 @@ function editUser(id, nameVal, emailVal) {
     body: JSON.stringify({ name: n, email: e })
   }).then(loadUsers);
 }
-
-// 🧊 3D tilt
-document.addEventListener("mousemove", (e) => {
-  const card = document.getElementById("card");
-  const x = (window.innerWidth / 2 - e.pageX) / 25;
-  const y = (window.innerHeight / 2 - e.pageY) / 25;
-  card.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
-});
 </script>
 
 </body>
