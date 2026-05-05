@@ -1,302 +1,225 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Modern App</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-
+  <title>SaaS Dashboard</title>
   <style>
     body {
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #0f172a;
-      color: white;
-    }
-
-    /* HERO SECTION */
-    .hero {
+      font-family: Arial;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 60px;
-      background: linear-gradient(135deg, #0f172a, #1e293b, #020617);
+      background: #f4f6f9;
     }
 
-    .hero-text {
-      max-width: 500px;
-    }
-
-    .hero h1 {
-      font-size: 48px;
-      margin-bottom: 10px;
-    }
-
-    .hero p {
-      color: #cbd5e1;
-      margin-bottom: 20px;
-    }
-
-    .cta-btn {
-      padding: 12px 20px;
-      border-radius: 30px;
-      border: none;
-      background: linear-gradient(90deg, #ff0066, #ff4d4d);
+    .sidebar {
+      width: 220px;
+      background: #111827;
       color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .hero-img {
-      width: 400px;
-      border-radius: 12px;
-    }
-
-    /* CARD */
-    .container {
-      max-width: 900px;
-      margin: 40px auto;
+      height: 100vh;
       padding: 20px;
     }
 
-    .card {
-      background: rgba(255,255,255,0.05);
-      padding: 25px;
-      border-radius: 12px;
-      backdrop-filter: blur(10px);
+    .sidebar h2 { margin-bottom: 30px; }
+
+    .sidebar button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      background: #1f2937;
+      color: white;
+      border: none;
+      cursor: pointer;
     }
 
+    .main { flex: 1; }
+
+    .navbar {
+      background: white;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .content { padding: 20px; }
+
     input {
-      padding: 10px;
-      border-radius: 6px;
-      border: none;
+      padding: 8px;
       margin: 5px;
-      width: 200px;
     }
 
     button {
-      padding: 8px 14px;
-      border-radius: 6px;
+      padding: 6px 10px;
       border: none;
       cursor: pointer;
-      margin: 5px;
     }
 
-    .btn-primary { background: #3b82f6; color: white; }
-    .btn-success { background: #22c55e; color: white; }
-    .btn-danger { background: #ef4444; color: white; }
-    .btn-warning { background: #f59e0b; color: white; }
-    .btn-dark { background: #444; color: white; }
+    .add { background: green; color: white; }
+    .delete { background: red; color: white; }
 
     table {
       width: 100%;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
       margin-top: 15px;
-      border-collapse: collapse;
     }
 
     th, td {
-      padding: 12px;
-      border-bottom: 1px solid #334155;
+      padding: 10px;
+      border-bottom: 1px solid #eee;
     }
-
-    tr:hover {
-      background: rgba(255,255,255,0.05);
-    }
-
-    #dashboard { display: none; }
   </style>
 </head>
 
 <body>
 
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-text">
-    <h1>Web App Dashboard</h1>
-    <p>Modern user management system with Google login and secure API</p>
-    <button class="cta-btn" onclick="scrollToApp()">Get Started →</button>
-  </div>
-
-  <img class="hero-img" src="https://images.unsplash.com/photo-1559028012-481c04fa702d" />
+<div class="sidebar">
+  <h2>🚀 SaaS App</h2>
+  <button onclick="loadUsers()">Users</button>
+  <button onclick="showProfile()">Profile</button>
 </div>
 
-<!-- APP -->
-<div class="container">
+<div class="main">
 
-  <!-- LOGIN -->
-  <div class="card" id="loginBox">
-    <h2>Login</h2>
-
-    <input id="username" placeholder="Username">
-    <input id="password" type="password" placeholder="Password"><br>
-
-    <button class="btn-primary" onclick="login()">Login</button>
-    <button class="btn-warning" onclick="register()">Register</button><br><br>
-
-    <button class="btn-danger" onclick="googleLogin()">
-      <i class="fa-brands fa-google"></i> Google Login
-    </button>
+  <div class="navbar">
+    <div>Dashboard</div>
+    <div>
+      👤 <span id="userEmail"></span>
+      <button onclick="logout()">Logout</button>
+    </div>
   </div>
 
-  <!-- DASHBOARD -->
-  <div class="card" id="dashboard">
-    <h2>Dashboard</h2>
+  <div class="content">
 
-    <button class="btn-dark" onclick="logout()">Logout</button>
-    <button class="btn-primary" onclick="loadUsers()">Load Users</button>
+    <!-- USERS -->
+    <div id="usersSection">
+      <h3>Users</h3>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="userList"></tbody>
-    </table>
+      <input id="name" placeholder="Name">
+      <input id="email" placeholder="Email">
+      <button class="add" onclick="addUser()">Add</button>
 
-    <h3>Add User</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="userList"></tbody>
+      </table>
+    </div>
 
-    <input id="name" placeholder="Name">
-    <input id="email" placeholder="Email">
-    <button class="btn-success" onclick="addUser()">Add</button>
+    <!-- PROFILE -->
+    <div id="profileSection" style="display:none;">
+      <h3>Profile</h3>
+      <p>Email: <span id="profileEmail"></span></p>
+    </div>
+
   </div>
-
 </div>
 
 <script>
 
 const API = "https://api-project-e4fn.onrender.com";
-const USER_API = API + "/users";
+let TOKEN = localStorage.getItem("token");
 
-let TOKEN = "";
-
-/* SCROLL */
-function scrollToApp() {
-  window.scrollTo({ top: 500, behavior: 'smooth' });
-}
-
-/* TOKEN */
+/* HANDLE GOOGLE TOKEN */
 const params = new URLSearchParams(window.location.search);
-const urlToken = params.get("token");
-
-if (urlToken) {
-  localStorage.setItem("token", urlToken);
-  window.history.replaceState({}, document.title, "/");
+if (params.get("token")) {
+  localStorage.setItem("token", params.get("token"));
+  window.location.href = "/";
 }
 
-TOKEN = localStorage.getItem("token") || "";
-
-/* AUTO LOGIN */
-if (TOKEN) {
-  loginBox.style.display = "none";
-  dashboard.style.display = "block";
+if (!TOKEN) {
+  alert("Not logged in");
 }
 
-/* LOGIN */
-function login() {
-  fetch(API + "/login", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      username: username.value,
-      password: password.value
-    })
+/* SHOW USER */
+function parseJwt (t) {
+  return JSON.parse(atob(t.split('.')[1]));
+}
+
+const user = parseJwt(TOKEN);
+document.getElementById("userEmail").innerText = user.sub;
+document.getElementById("profileEmail").innerText = user.sub;
+
+/* LOAD USERS */
+function loadUsers() {
+  fetch(API + "/users", {
+    headers: { "Authorization": "Bearer " + TOKEN }
   })
   .then(res => res.json())
   .then(data => {
-    if (data.token) {
-      TOKEN = data.token;
-      localStorage.setItem("token", TOKEN);
-
-      loginBox.style.display = "none";
-      dashboard.style.display = "block";
-    }
+    let rows = "";
+    data.forEach(u => {
+      rows += `
+        <tr>
+          <td>${u.name}</td>
+          <td>${u.email}</td>
+          <td>
+            <button class="delete" onclick="deleteUser(${u.id})">X</button>
+          </td>
+        </tr>`;
+    });
+    document.getElementById("userList").innerHTML = rows;
   });
 }
 
-/* REGISTER */
-function register() {
-  fetch(API + "/register", {
+/* 🔥 FIXED ADD USER */
+function addUser() {
+  const nameVal = document.getElementById("name").value;
+  const emailVal = document.getElementById("email").value;
+
+  console.log("Sending:", nameVal, emailVal);
+
+  fetch(API + "/users", {
     method: "POST",
-    headers: {"Content-Type": "application/json"},
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + TOKEN
+    },
     body: JSON.stringify({
-      username: username.value,
-      password: password.value
+      name: nameVal,
+      email: emailVal
     })
-  }).then(() => alert("Registered"));
+  })
+  .then(res => res.json().then(data => ({ status: res.status, body: data })))
+  .then(result => {
+    console.log("Response:", result);
+
+    if (result.status === 200) {
+      alert("✅ User added");
+      loadUsers();
+    } else {
+      alert("❌ Error: " + (result.body.error || "Unknown error"));
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    alert("❌ Network error");
+  });
 }
 
-/* GOOGLE */
-function googleLogin() {
-  window.location.href = API + "/google_login";
+/* DELETE */
+function deleteUser(id) {
+  fetch(API + "/users/" + id, {
+    method: "DELETE",
+    headers: { "Authorization": "Bearer " + TOKEN }
+  }).then(loadUsers);
+}
+
+/* PROFILE */
+function showProfile() {
+  document.getElementById("usersSection").style.display = "none";
+  document.getElementById("profileSection").style.display = "block";
 }
 
 /* LOGOUT */
 function logout() {
   localStorage.removeItem("token");
   location.reload();
-}
-
-/* USERS */
-function loadUsers() {
-  fetch(USER_API, {
-    headers: { "Authorization": "Bearer " + TOKEN }
-  })
-  .then(res => res.json())
-  .then(data => renderUsers(data));
-}
-
-function renderUsers(data) {
-  let rows = "";
-  data.forEach(u => {
-    rows += `
-    <tr>
-      <td>${u.name}</td>
-      <td>${u.email}</td>
-      <td>
-        <button class="btn-danger" onclick="deleteUser(${u.id})">❌</button>
-        <button class="btn-warning" onclick="editUser(${u.id}, '${u.name}', '${u.email}')">✏️</button>
-      </td>
-    </tr>`;
-  });
-  userList.innerHTML = rows;
-}
-
-function addUser() {
-  fetch(USER_API, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + TOKEN
-    },
-    body: JSON.stringify({
-      name: name.value,
-      email: email.value
-    })
-  }).then(loadUsers);
-}
-
-function deleteUser(id) {
-  fetch(USER_API + "/" + id, {
-    method: "DELETE",
-    headers: {
-      "Authorization": "Bearer " + TOKEN
-    }
-  }).then(loadUsers);
-}
-
-function editUser(id, nameVal, emailVal) {
-  const n = prompt("Name:", nameVal);
-  const e = prompt("Email:", emailVal);
-
-  fetch(USER_API + "/" + id, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + TOKEN
-    },
-    body: JSON.stringify({ name: n, email: e })
-  }).then(loadUsers);
 }
 
 </script>
