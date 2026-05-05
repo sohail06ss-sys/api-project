@@ -52,7 +52,7 @@ def init_db():
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT,
-            email TEXT
+            email TEXT UNIQUE
         )
     """)
 
@@ -115,15 +115,13 @@ def login():
     return jsonify({"msg": "Invalid login"}), 401
 
 
-# ---------- GOOGLE LOGIN (UPDATED WITH SAVE) ----------
+# ---------- GOOGLE LOGIN ----------
 @app.route("/google_login")
 def google_login():
     try:
-        # Step 1: Redirect to Google
         if not google.authorized:
             return redirect(url_for("google.login"))
 
-        # Step 2: Get user info
         resp = google.get("https://www.googleapis.com/oauth2/v2/userinfo")
 
         if not resp or not resp.ok:
@@ -137,7 +135,7 @@ def google_login():
         if not email:
             return f"❌ Email missing → {user_info}"
 
-        # 🔥 STEP 3: SAVE USER INTO DATABASE
+        # 🔥 SAVE USER INTO DATABASE
         conn = sqlite3.connect("database.db")
         cursor = conn.cursor()
 
@@ -153,10 +151,9 @@ def google_login():
 
         conn.close()
 
-        # 🔐 STEP 4: CREATE TOKEN
+        # 🔐 CREATE TOKEN
         token = create_access_token(identity=email)
 
-        # 🔁 STEP 5: REDIRECT
         return redirect(f"/?token={token}")
 
     except Exception as e:
@@ -181,6 +178,7 @@ def get_users():
     ])
 
 
+# ✅ FIXED ADD USER (IMPORTANT)
 @app.route('/users', methods=['POST'])
 @jwt_required()
 def add_user():
@@ -189,15 +187,23 @@ def add_user():
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
 
-    cursor.execute(
-        "INSERT INTO users (name, email) VALUES (?, ?)",
-        (data['name'], data['email'])
-    )
+    try:
+        cursor.execute(
+            "INSERT INTO users (name, email) VALUES (?, ?)",
+            (data['name'], data['email'])
+        )
+        conn.commit()
 
-    conn.commit()
-    conn.close()
+        return jsonify({"message": "User added"})
 
-    return jsonify({"message": "User added"})
+    except sqlite3.IntegrityError:
+        return jsonify({"error": "Email already exists"}), 400
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+    finally:
+        conn.close()
 
 
 @app.route('/users/<int:id>', methods=['DELETE'])
