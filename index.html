@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>3D CRUD App</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+    }
+
+    .card {
+      width: 900px;
+      padding: 25px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(15px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      transition: transform 0.2s ease;
+    }
+
+    h2 { text-align: center; }
+
+    input {
+      padding: 10px;
+      margin: 5px;
+      border-radius: 8px;
+      border: none;
+      width: 200px;
+    }
+
+    button {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      margin: 5px;
+      transition: 0.2s;
+    }
+
+    button:hover { transform: scale(1.05); }
+
+    .add-btn { background: #2ecc71; }
+    .delete-btn { background: #e74c3c; color: white; }
+    .edit-btn { background: #f39c12; }
+    .load-btn { background: #3498db; color: white; }
+
+    .google-btn {
+      background:#db4437;
+      color:white;
+      width: 220px;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 15px;
+      border-collapse: collapse;
+    }
+
+    td, th { padding: 10px; }
+
+    tr:hover { background: rgba(255,255,255,0.1); }
+
+    #dashboard { display: none; }
+  </style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+
+  <!-- LOGIN -->
+  <div id="loginBox">
+    <h2>🔐 Login</h2>
+    <input id="username" placeholder="Username">
+    <input id="password" type="password" placeholder="Password"><br>
+    <button onclick="login()">Login</button>
+    <button onclick="register()">Register</button><br>
+
+    <!-- 🔴 GOOGLE BUTTON -->
+    <button class="google-btn" onclick="googleLogin()">
+      <i class="fa-brands fa-google"></i> Login with Google
+    </button>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard">
+    <h2>🚀 3D User Dashboard</h2>
+
+    <button onclick="logout()" style="float:right;background:#555;">Logout</button>
+
+    <button class="load-btn" onclick="loadUsers()">Load Users</button>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="userList"></tbody>
+    </table>
+
+    <h3>Add User</h3>
+
+    <input id="name" placeholder="Name">
+    <input id="email" placeholder="Email">
+    <button class="add-btn" onclick="addUser()">Add</button>
+  </div>
+
+</div>
+
+<script>
+const API = "https://api-project-e4fn.onrender.com";
+const USER_API = API + "/users";
+
+let TOKEN = "";
+
+// 🔐 CHECK TOKEN FROM URL (Google login)
+const params = new URLSearchParams(window.location.search);
+const urlToken = params.get("token");
+
+if (urlToken) {
+  localStorage.setItem("token", urlToken);
+  window.history.replaceState({}, document.title, "/");
+}
+
+// 🔐 LOAD TOKEN
+TOKEN = localStorage.getItem("token") || "";
+
+// 🔐 AUTO LOGIN
+if (TOKEN) {
+  loginBox.style.display = "none";
+  dashboard.style.display = "block";
+}
+
+// 🔐 REGISTER
+function register() {
+  fetch(API + "/register", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      username: username.value,
+      password: password.value
+    })
+  }).then(() => alert("Registered"));
+}
+
+// 🔐 LOGIN (normal)
+function login() {
+  fetch(API + "/login", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      username: username.value,
+      password: password.value
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.token) {
+      TOKEN = data.token;
+      localStorage.setItem("token", TOKEN);
+
+      loginBox.style.display = "none";
+      dashboard.style.display = "block";
+    } else {
+      alert("Invalid login");
+    }
+  });
+}
+
+// 🔐 GOOGLE LOGIN
+function googleLogin() {
+  window.location.href = API + "/google_login";
+}
+
+// 🔐 LOGOUT
+function logout() {
+  localStorage.removeItem("token");
+  location.reload();
+}
+
+// USERS
+function loadUsers() {
+  fetch(USER_API, {
+    headers: {
+      "Authorization": "Bearer " + TOKEN
+    }
+  })
+  .then(res => res.json())
+  .then(data => renderUsers(data));
+}
+
+function renderUsers(data) {
+  let rows = "";
+  data.forEach(u => {
+    rows += `
+    <tr>
+      <td>${u.name}</td>
+      <td>${u.email}</td>
+      <td>
+        <button class="delete-btn" onclick="deleteUser(${u.id})">
+          <i class="fa fa-trash"></i>
+        </button>
+        <button class="edit-btn" onclick="editUser(${u.id}, '${u.name}', '${u.email}')">
+          <i class="fa fa-edit"></i>
+        </button>
+      </td>
+    </tr>`;
+  });
+  userList.innerHTML = rows;
+}
+
+function addUser() {
+  fetch(USER_API, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + TOKEN
+    },
+    body: JSON.stringify({
+      name: name.value,
+      email: email.value
+    })
+  }).then(loadUsers);
+}
+
+function deleteUser(id) {
+  fetch(USER_API + "/" + id, {
+    method: "DELETE",
+    headers: {
+      "Authorization": "Bearer " + TOKEN
+    }
+  }).then(loadUsers);
+}
+
+function editUser(id, nameVal, emailVal) {
+  const n = prompt("Name:", nameVal);
+  const e = prompt("Email:", emailVal);
+
+  fetch(USER_API + "/" + id, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + TOKEN
+    },
+    body: JSON.stringify({ name: n, email: e })
+  }).then(loadUsers);
+}
+
+// 🧊 3D tilt
+document.addEventListener("mousemove", (e) => {
+  const card = document.getElementById("card");
+  const x = (window.innerWidth / 2 - e.pageX) / 25;
+  const y = (window.innerHeight / 2 - e.pageY) / 25;
+  card.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+});
+</script>
+
+</body>
+</html>
