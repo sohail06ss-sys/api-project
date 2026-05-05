@@ -73,11 +73,12 @@
   <!-- LOGIN -->
   <div id="loginBox">
     <h2>🔐 Login</h2>
+
     <input id="username" placeholder="Username">
     <input id="password" type="password" placeholder="Password"><br>
 
     <button onclick="login()">Login</button>
-    <button onclick="register()">Register</button><br>
+    <button onclick="register()">Register</button><br><br>
 
     <button class="google-btn" onclick="googleLogin()">
       <i class="fa-brands fa-google"></i> Login with Google
@@ -86,6 +87,7 @@
 
   <!-- DASHBOARD -->
   <div id="dashboard">
+
     <h2>🚀 Dashboard</h2>
 
     <button onclick="logout()" style="float:right;background:#555;">Logout</button>
@@ -108,11 +110,13 @@
     <input id="name" placeholder="Name">
     <input id="email" placeholder="Email">
     <button class="add-btn" onclick="addUser()">Add</button>
+
   </div>
 
 </div>
 
 <script>
+
 const API = "https://api-project-e4fn.onrender.com";
 const USER_API = API + "/users";
 
@@ -150,22 +154,22 @@ function register() {
     method: "POST",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({
-      username: username.value,
-      password: password.value
+      username: document.getElementById("username").value,
+      password: document.getElementById("password").value
     })
-  }).then(() => alert("Registered"));
+  }).then(() => alert("Registered successfully"));
 }
 
 /* ===========================
-   NORMAL LOGIN
+   LOGIN
 =========================== */
 function login() {
   fetch(API + "/login", {
     method: "POST",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({
-      username: username.value,
-      password: password.value
+      username: document.getElementById("username").value,
+      password: document.getElementById("password").value
     })
   })
   .then(res => res.json())
@@ -198,11 +202,13 @@ function logout() {
 }
 
 /* ===========================
-   USERS API
+   USERS
 =========================== */
 function loadUsers() {
   fetch(USER_API, {
-    headers: { "Authorization": "Bearer " + TOKEN }
+    headers: {
+      "Authorization": "Bearer " + TOKEN
+    }
   })
   .then(res => res.json())
   .then(data => renderUsers(data));
@@ -210,6 +216,7 @@ function loadUsers() {
 
 function renderUsers(data) {
   let rows = "";
+
   data.forEach(u => {
     rows += `
     <tr>
@@ -221,6 +228,7 @@ function renderUsers(data) {
       </td>
     </tr>`;
   });
+
   document.getElementById("userList").innerHTML = rows;
 }
 
@@ -232,8 +240,8 @@ function addUser() {
       "Authorization": "Bearer " + TOKEN
     },
     body: JSON.stringify({
-      name: name.value,
-      email: email.value
+      name: document.getElementById("name").value,
+      email: document.getElementById("email").value
     })
   }).then(loadUsers);
 }
@@ -241,7 +249,9 @@ function addUser() {
 function deleteUser(id) {
   fetch(USER_API + "/" + id, {
     method: "DELETE",
-    headers: { "Authorization": "Bearer " + TOKEN }
+    headers: {
+      "Authorization": "Bearer " + TOKEN
+    }
   }).then(loadUsers);
 }
 
@@ -258,6 +268,7 @@ function editUser(id, nameVal, emailVal) {
     body: JSON.stringify({ name: n, email: e })
   }).then(loadUsers);
 }
+
 </script>
 
 </body>
