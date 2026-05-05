@@ -10,12 +10,20 @@ from flask_dance.contrib.google import make_google_blueprint, google
 app = Flask(__name__)
 CORS(app)
 
+# 🔥 FIX FOR RENDER / HTTPS (VERY IMPORTANT)
+app.config['SESSION_COOKIE_SECURE'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = "None"
+app.config['PREFERRED_URL_SCHEME'] = "https"
+
 # 🔐 JWT CONFIG
 app.config["JWT_SECRET_KEY"] = "secret123"
 jwt = JWTManager(app)
 
-# 🔐 GOOGLE CONFIG (ENV VARIABLES)
+# 🔐 GOOGLE CONFIG
 app.secret_key = "supersecretkey"
+
+# ⚠️ Needed for OAuth on cloud
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 google_bp = make_google_blueprint(
     client_id=os.environ.get("GOOGLE_CLIENT_ID"),
@@ -96,16 +104,17 @@ def login():
 
     return jsonify({"msg": "Invalid login"}), 401
 
-# ---------- GOOGLE LOGIN (DEBUG FIXED) ----------
+# ---------- GOOGLE LOGIN ----------
 @app.route("/google_login")
 def google_login():
     try:
+        # Step 1: Redirect to Google
         if not google.authorized:
             return redirect("/login/google")
 
+        # Step 2: Get user info
         resp = google.get("/oauth2/v2/userinfo")
 
-        # 🔍 Debug checks
         if resp is None:
             return "ERROR: No response from Google"
 
@@ -118,10 +127,12 @@ def google_login():
         email = user_info.get("email")
 
         if not email:
-            return f"ERROR: Email missing in response → {user_info}"
+            return f"ERROR: Email missing → {user_info}"
 
+        # Step 3: Create JWT token
         token = create_access_token(identity=email)
 
+        # Step 4: Redirect to frontend
         return redirect(f"/?token={token}")
 
     except Exception as e:
