@@ -14,7 +14,7 @@ CORS(app)
 app.config["JWT_SECRET_KEY"] = "secret123"
 jwt = JWTManager(app)
 
-# 🔐 GOOGLE CONFIG
+# 🔐 GOOGLE CONFIG (USE ENV VARIABLES)
 app.secret_key = "supersecretkey"
 
 google_bp = make_google_blueprint(
@@ -100,28 +100,28 @@ def login():
 @app.route("/google_login")
 def google_login():
     try:
-        # Step 1: Redirect to Google if not authorized
+        # Step 1: redirect to Google
         if not google.authorized:
             return redirect("/login/google")
 
-        # ✅ Step 2: Get user info (UPDATED ENDPOINT)
-        resp = google.get("/userinfo")
+        # Step 2: get user info (IMPORTANT ENDPOINT)
+        resp = google.get("/oauth2/v2/userinfo")
 
         if not resp.ok:
             return f"Google API error: {resp.text}"
 
         user_info = resp.json()
-        print("USER INFO:", user_info)
+        print("GOOGLE USER:", user_info)
 
         email = user_info.get("email")
 
         if not email:
             return "No email returned from Google"
 
-        # Step 3: Create JWT token
+        # Step 3: create token
         token = create_access_token(identity=email)
 
-        # Step 4: Redirect to frontend with token
+        # Step 4: redirect to frontend
         return redirect(f"/?token={token}")
 
     except Exception as e:
