@@ -10,26 +10,26 @@ from flask_dance.contrib.google import make_google_blueprint, google
 app = Flask(__name__)
 CORS(app)
 
-# 🔐 REQUIRED FOR RENDER (VERY IMPORTANT)
+# 🔐 REQUIRED FOR RENDER
 app.config['SESSION_COOKIE_SECURE'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = "None"
 app.config['PREFERRED_URL_SCHEME'] = "https"
 
-# 🔐 SECRET KEY (use env if available)
+# 🔐 SECRET KEY
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "dev-secret")
 
 # 🔐 JWT
 app.config["JWT_SECRET_KEY"] = "secret123"
 jwt = JWTManager(app)
 
-# 🔐 GOOGLE ENV VARIABLES
+# 🔐 GOOGLE ENV
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET")
 
 if not GOOGLE_CLIENT_ID or not GOOGLE_CLIENT_SECRET:
-    raise Exception("❌ Google credentials missing in Render ENV")
+    raise Exception("❌ Google credentials missing")
 
-# 🔐 GOOGLE BLUEPRINT (FINAL FIXED VERSION)
+# 🔐 GOOGLE SETUP
 google_bp = make_google_blueprint(
     client_id=GOOGLE_CLIENT_ID,
     client_secret=GOOGLE_CLIENT_SECRET,
@@ -114,35 +114,55 @@ def login():
 
     return jsonify({"msg": "Invalid login"}), 401
 
-# ---------- GOOGLE LOGIN ----------
+
+# ---------- GOOGLE LOGIN (UPDATED WITH SAVE) ----------
 @app.route("/google_login")
 def google_login():
     try:
-        # Step 1 → redirect to Google
+        # Step 1: Redirect to Google
         if not google.authorized:
             return redirect(url_for("google.login"))
 
-        # Step 2 → fetch user info
+        # Step 2: Get user info
         resp = google.get("https://www.googleapis.com/oauth2/v2/userinfo")
 
         if not resp or not resp.ok:
             return f"❌ Google API error: {resp.text if resp else 'No response'}"
 
         user_info = resp.json()
+
+        name = user_info.get("name", "Google User")
         email = user_info.get("email")
 
         if not email:
             return f"❌ Email missing → {user_info}"
 
-        # Step 3 → create JWT
+        # 🔥 STEP 3: SAVE USER INTO DATABASE
+        conn = sqlite3.connect("database.db")
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT * FROM users WHERE email=?", (email,))
+        existing = cursor.fetchone()
+
+        if not existing:
+            cursor.execute(
+                "INSERT INTO users (name, email) VALUES (?, ?)",
+                (name, email)
+            )
+            conn.commit()
+
+        conn.close()
+
+        # 🔐 STEP 4: CREATE TOKEN
         token = create_access_token(identity=email)
 
-        # Step 4 → redirect to frontend
+        # 🔁 STEP 5: REDIRECT
         return redirect(f"/?token={token}")
 
     except Exception as e:
         import traceback
         return f"ERROR: {str(e)}\n{traceback.format_exc()}"
+
 
 # ---------- USERS ----------
 @app.route('/users', methods=['GET'])
@@ -159,6 +179,7 @@ def get_users():
         {"id": r[0], "name": r[1], "email": r[2]}
         for r in rows
     ])
+
 
 @app.route('/users', methods=['POST'])
 @jwt_required()
@@ -178,6 +199,7 @@ def add_user():
 
     return jsonify({"message": "User added"})
 
+
 @app.route('/users/<int:id>', methods=['DELETE'])
 @jwt_required()
 def delete_user(id):
@@ -189,6 +211,7 @@ def delete_user(id):
     conn.close()
 
     return jsonify({"message": "User deleted"})
+
 
 @app.route('/users/<int:id>', methods=['PUT'])
 @jwt_required()
