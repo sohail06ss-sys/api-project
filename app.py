@@ -88,7 +88,10 @@ def register():
     mobile = data.get("mobile", "")
 
     if not name or not email or not password:
-        return jsonify({"error": "Missing fields"}), 400
+
+        return jsonify({
+            "error": "Missing fields"
+        }), 400
 
     hashed_password = generate_password_hash(password)
 
@@ -150,6 +153,7 @@ def login():
     conn.close()
 
     if not user:
+
         return jsonify({
             "error": "User not found"
         }), 401
@@ -168,12 +172,7 @@ def login():
         }), 401
 
     token = create_access_token(
-        identity={
-            "email": user[2],
-            "name": user[1],
-            "picture": user[4] if user[4] else "",
-            "mobile": user[5] if user[5] else ""
-        }
+        identity=email
     )
 
     return jsonify({
@@ -184,6 +183,87 @@ def login():
     })
 
 # ---------------- GOOGLE LOGIN ----------------
+
+@app.route('/google_login')
+def google_login():
+
+    try:
+
+        if not google.authorized:
+            return redirect(url_for("google.login"))
+
+        resp = google.get(
+            "https://www.googleapis.com/oauth2/v2/userinfo"
+        )
+
+        if not resp.ok:
+            return "Google API Error"
+
+        user_info = resp.json()
+
+        name = user_info.get("name", "Google User")
+        email = user_info.get("email", "")
+        picture = user_info.get("picture", "")
+
+        conn = sqlite3.connect("database.db")
+        cursor = conn.cursor()
+
+        cursor.execute(
+            """
+            SELECT * FROM users
+            WHERE email=?
+            """,
+            (email,)
+        )
+
+        existing = cursor.fetchone()
+
+        if not existing:
+
+            cursor.execute(
+                """
+                INSERT INTO users
+                (name,email,password,picture,mobile)
+                VALUES(?,?,?,?,?)
+                """,
+                (
+                    name,
+                    email,
+                    None,
+                    picture,
+                    ""
+                )
+            )
+
+        else:
+
+            cursor.execute(
+                """
+                UPDATE users
+                SET name=?, picture=?
+                WHERE email=?
+                """,
+                (
+                    name,
+                    picture,
+                    email
+                )
+            )
+
+        conn.commit()
+        conn.close()
+
+        token = create_access_token(identity=email)
+
+        return redirect(
+            f"https://api-project-e4fn.onrender.com/?token={token}"
+        )
+
+    except Exception as e:
+
+        return f"Google Login Error: {str(e)}"
+
+# ---------------- CURRENT USER ----------------
 
 @app.route('/me')
 @jwt_required()
@@ -225,56 +305,6 @@ def me():
         "email": user[1],
         "picture": user[2] if user[2] else "",
         "mobile": user[3] if user[3] else "Not Added"
-    })
-# ---------------- CURRENT USER ----------------
-
-@app.route('/me')
-@jwt_required()
-def me():
-
-    current_user = get_jwt_identity()
-
-    # JWT stores dictionary
-    if isinstance(current_user, dict):
-
-        return jsonify({
-            "name": current_user.get("name", "User"),
-            "email": current_user.get("email", ""),
-            "picture": current_user.get("picture", ""),
-            "mobile": current_user.get("mobile", "")
-        })
-
-    # fallback if only email stored
-    conn = sqlite3.connect("database.db")
-    cursor = conn.cursor()
-
-    cursor.execute(
-        """
-        SELECT name,email,picture,mobile
-        FROM users
-        WHERE email=?
-        """,
-        (current_user,)
-    )
-
-    user = cursor.fetchone()
-
-    conn.close()
-
-    if not user:
-
-        return jsonify({
-            "name": "User",
-            "email": "",
-            "picture": "",
-            "mobile": ""
-        })
-
-    return jsonify({
-        "name": user[0],
-        "email": user[1],
-        "picture": user[2] if user[2] else "",
-        "mobile": user[3] if user[3] else ""
     })
 
 # ---------------- USERS ----------------
