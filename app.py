@@ -30,7 +30,7 @@ jwt = JWTManager(app)
 
 # ---------------- ADMIN EMAIL ----------------
 
-ADMIN_EMAIL = "YOUR_sohail06.ss@gmail.com"
+ADMIN_EMAIL = "sohail06.ss@gmail.com"
 
 # ---------------- GOOGLE CONFIG ----------------
 
@@ -68,6 +68,20 @@ def init_db():
         role TEXT DEFAULT 'User'
     )
     """)
+
+    # SAFE ROLE COLUMN MIGRATION
+
+    try:
+
+        cursor.execute(
+            """
+            ALTER TABLE users
+            ADD COLUMN role TEXT DEFAULT 'User'
+            """
+        )
+
+    except:
+        pass
 
     conn.commit()
     conn.close()
@@ -167,6 +181,7 @@ def login():
         }), 401
 
     # GOOGLE LOGIN ACCOUNT
+
     if user[3] is None:
 
         return jsonify({
