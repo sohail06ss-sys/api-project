@@ -15,7 +15,6 @@ from werkzeug.security import (
     check_password_hash
 )
 
-# GOOGLE LOGIN
 from flask_dance.contrib.google import make_google_blueprint, google
 
 app = Flask(__name__)
@@ -60,7 +59,8 @@ def init_db():
         name TEXT,
         email TEXT UNIQUE,
         password TEXT,
-        picture TEXT
+        picture TEXT,
+        mobile TEXT
     )
     """)
 
@@ -85,6 +85,7 @@ def register():
     name = data.get("name")
     email = data.get("email")
     password = data.get("password")
+    mobile = data.get("mobile", "")
 
     if not name or not email or not password:
         return jsonify({"error": "Missing fields"}), 400
@@ -97,16 +98,31 @@ def register():
     try:
 
         cursor.execute(
-            "INSERT INTO users(name,email,password,picture) VALUES(?,?,?,?)",
-            (name, email, hashed_password, "")
+            """
+            INSERT INTO users
+            (name,email,password,picture,mobile)
+            VALUES(?,?,?,?,?)
+            """,
+            (
+                name,
+                email,
+                hashed_password,
+                "",
+                mobile
+            )
         )
 
         conn.commit()
 
-        return jsonify({"message": "Registration successful"})
+        return jsonify({
+            "message": "Registration successful"
+        })
 
     except sqlite3.IntegrityError:
-        return jsonify({"error": "User already exists"}), 400
+
+        return jsonify({
+            "error": "User already exists"
+        }), 400
 
     finally:
         conn.close()
@@ -134,29 +150,37 @@ def login():
     conn.close()
 
     if not user:
-        return jsonify({"error": "User not found"}), 401
-
-    # GOOGLE ACCOUNT LOGIN
-    if user[3] is None:
         return jsonify({
-            "error": "Use Google Login for this account"
+            "error": "User not found"
+        }), 401
+
+    # GOOGLE LOGIN ACCOUNT
+    if user[3] is None:
+
+        return jsonify({
+            "error": "Use Google Login"
         }), 401
 
     if not check_password_hash(user[3], password):
-        return jsonify({"error": "Wrong password"}), 401
+
+        return jsonify({
+            "error": "Wrong password"
+        }), 401
 
     token = create_access_token(
         identity={
             "email": user[2],
             "name": user[1],
-            "picture": user[4] if user[4] else ""
+            "picture": user[4] if user[4] else "",
+            "mobile": user[5] if user[5] else ""
         }
     )
 
     return jsonify({
         "token": token,
         "name": user[1],
-        "picture": user[4]
+        "picture": user[4],
+        "mobile": user[5]
     })
 
 # ---------------- GOOGLE LOGIN ----------------
@@ -196,10 +220,17 @@ def google_login():
 
             cursor.execute(
                 """
-                INSERT INTO users(name,email,password,picture)
-                VALUES(?,?,?,?)
+                INSERT INTO users
+                (name,email,password,picture,mobile)
+                VALUES(?,?,?,?,?)
                 """,
-                (name, email, None, picture)
+                (
+                    name,
+                    email,
+                    None,
+                    picture,
+                    ""
+                )
             )
 
             conn.commit()
@@ -210,7 +241,8 @@ def google_login():
             identity={
                 "email": email,
                 "name": name,
-                "picture": picture
+                "picture": picture,
+                "mobile": ""
             }
         )
 
@@ -219,6 +251,7 @@ def google_login():
         )
 
     except Exception as e:
+
         return f"Google Login Error: {str(e)}"
 
 # ---------------- CURRENT USER ----------------
@@ -241,7 +274,10 @@ def get_users():
     cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT id,name,email,picture FROM users"
+        """
+        SELECT id,name,email,picture,mobile
+        FROM users
+        """
     )
 
     rows = cursor.fetchall()
@@ -249,12 +285,15 @@ def get_users():
     conn.close()
 
     return jsonify([
+
         {
             "id": r[0],
             "name": r[1],
             "email": r[2],
-            "picture": r[3]
+            "picture": r[3],
+            "mobile": r[4]
         }
+
         for r in rows
     ])
 
@@ -273,23 +312,30 @@ def add_user():
 
         cursor.execute(
             """
-            INSERT INTO users(name,email,password,picture)
-            VALUES(?,?,?,?)
+            INSERT INTO users
+            (name,email,password,picture,mobile)
+            VALUES(?,?,?,?,?)
             """,
             (
                 data['name'],
                 data['email'],
                 None,
-                ""
+                "",
+                data.get("mobile", "")
             )
         )
 
         conn.commit()
 
-        return jsonify({"message": "User added"})
+        return jsonify({
+            "message": "User added"
+        })
 
     except sqlite3.IntegrityError:
-        return jsonify({"error": "User exists"}), 400
+
+        return jsonify({
+            "error": "User already exists"
+        }), 400
 
     finally:
         conn.close()
@@ -311,7 +357,9 @@ def delete_user(id):
     conn.commit()
     conn.close()
 
-    return jsonify({"message": "Deleted"})
+    return jsonify({
+        "message": "Deleted"
+    })
 
 # ---------------- UPDATE USER ----------------
 
@@ -327,20 +375,28 @@ def update_user(id):
     cursor.execute(
         """
         UPDATE users
-        SET name=?, email=?
+        SET name=?, email=?, mobile=?
         WHERE id=?
         """,
-        (data['name'], data['email'], id)
+        (
+            data['name'],
+            data['email'],
+            data.get("mobile", ""),
+            id
+        )
     )
 
     conn.commit()
     conn.close()
 
-    return jsonify({"message": "Updated"})
+    return jsonify({
+        "message": "Updated"
+    })
 
 # ---------------- RUN ----------------
 
 if __name__ == "__main__":
+
     app.run(
         host="0.0.0.0",
         port=int(os.environ.get("PORT", 5000))
