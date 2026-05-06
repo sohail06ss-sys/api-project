@@ -1,178 +1,352 @@
+# Replace your FULL `index.html` with this
+
+```html
 <!DOCTYPE html>
 <html>
 <head>
   <title>SaaS Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
-    body {
+    * {
       margin: 0;
-      font-family: Arial;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f7fb;
+    }
+
+    /* LOGIN SCREEN */
+    #loginScreen {
+      height: 100vh;
       display: flex;
-      background: #f4f6f9;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+    }
+
+    .login-card {
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      width: 350px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .login-card h1 {
+      margin-bottom: 10px;
+      color: #111827;
+    }
+
+    .login-card p {
+      color: #6b7280;
+      margin-bottom: 30px;
+    }
+
+    .google-btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: #4285F4;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .google-btn:hover {
+      background: #2563eb;
+    }
+
+    /* DASHBOARD */
+    #dashboard {
+      display: none;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
     }
 
     .sidebar {
-      width: 220px;
+      width: 240px;
       background: #111827;
       color: white;
-      height: 100vh;
-      padding: 20px;
+      padding: 25px;
     }
 
-    .sidebar h2 { margin-bottom: 30px; }
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 40px;
+    }
 
     .sidebar button {
       width: 100%;
-      margin: 10px 0;
-      padding: 10px;
+      padding: 14px;
+      margin-bottom: 12px;
+      border: none;
+      border-radius: 10px;
       background: #1f2937;
       color: white;
-      border: none;
       cursor: pointer;
+      font-size: 15px;
     }
 
-    .main { flex: 1; }
+    .sidebar button:hover {
+      background: #374151;
+    }
+
+    .main {
+      flex: 1;
+    }
 
     .navbar {
       background: white;
-      padding: 15px;
+      padding: 18px 30px;
       display: flex;
       justify-content: space-between;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
 
-    .content { padding: 20px; }
-
-    input {
-      padding: 8px;
-      margin: 5px;
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 15px;
     }
 
-    button {
-      padding: 6px 10px;
+    .logout {
+      background: #ef4444;
+      color: white;
       border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
       cursor: pointer;
     }
 
-    .add { background: green; color: white; }
-    .delete { background: red; color: white; }
+    .content {
+      padding: 30px;
+    }
+
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .card h2 {
+      margin-bottom: 20px;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+    }
+
+    .add-btn {
+      background: #10b981;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
 
     table {
       width: 100%;
-      background: white;
-      border-radius: 8px;
-      overflow: hidden;
-      margin-top: 15px;
+      border-collapse: collapse;
     }
 
     th, td {
-      padding: 10px;
-      border-bottom: 1px solid #eee;
+      padding: 14px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+    }
+
+    th {
+      background: #f9fafb;
+    }
+
+    .delete-btn {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
     }
   </style>
 </head>
 
 <body>
 
-<div class="sidebar">
-  <h2>🚀 SaaS App</h2>
-  <button onclick="loadUsers()">Users</button>
-  <button onclick="showProfile()">Profile</button>
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-card">
+    <h1>🚀 SaaS Dashboard</h1>
+    <p>Login using your Google account</p>
+
+    <button class="google-btn" onclick="googleLogin()">
+      Continue with Google
+    </button>
+  </div>
 </div>
 
-<div class="main">
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <div class="layout">
 
-  <div class="navbar">
-    <div>Dashboard</div>
-    <div>
-      👤 <span id="userEmail"></span>
-      <button onclick="logout()">Logout</button>
-    </div>
-  </div>
+    <div class="sidebar">
+      <div class="logo">🚀 SaaS App</div>
 
-  <div class="content">
-
-    <!-- USERS -->
-    <div id="usersSection">
-      <h3>Users</h3>
-
-      <input id="name" placeholder="Name">
-      <input id="email" placeholder="Email">
-      <button class="add" onclick="addUser()">Add</button>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="userList"></tbody>
-      </table>
+      <button onclick="loadUsers()">Users</button>
+      <button onclick="showProfile()">Profile</button>
     </div>
 
-    <!-- PROFILE -->
-    <div id="profileSection" style="display:none;">
-      <h3>Profile</h3>
-      <p>Email: <span id="profileEmail"></span></p>
-    </div>
+    <div class="main">
 
+      <div class="navbar">
+        <h2>Dashboard</h2>
+
+        <div class="profile">
+          <span id="userEmail"></span>
+          <button class="logout" onclick="logout()">Logout</button>
+        </div>
+      </div>
+
+      <div class="content">
+
+        <!-- USERS -->
+        <div id="usersSection" class="card">
+          <h2>Users</h2>
+
+          <div class="form-row">
+            <input id="name" placeholder="Name">
+            <input id="email" placeholder="Email">
+            <button class="add-btn" onclick="addUser()">Add User</button>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody id="userList"></tbody>
+          </table>
+        </div>
+
+        <!-- PROFILE -->
+        <div id="profileSection" class="card" style="display:none;">
+          <h2>Profile</h2>
+          <p><strong>Email:</strong> <span id="profileEmail"></span></p>
+        </div>
+
+      </div>
+    </div>
   </div>
 </div>
 
 <script>
 
 const API = "https://api-project-e4fn.onrender.com";
-let TOKEN = localStorage.getItem("token");
 
-/* HANDLE GOOGLE TOKEN */
+// GOOGLE LOGIN
+function googleLogin() {
+  window.location.href = API + "/google_login";
+}
+
+// HANDLE TOKEN
 const params = new URLSearchParams(window.location.search);
+
 if (params.get("token")) {
   localStorage.setItem("token", params.get("token"));
   window.location.href = "/";
 }
 
+const TOKEN = localStorage.getItem("token");
+
+// SHOW LOGIN OR DASHBOARD
 if (!TOKEN) {
-  alert("Not logged in");
+  document.getElementById("loginScreen").style.display = "flex";
+  document.getElementById("dashboard").style.display = "none";
+} else {
+  document.getElementById("loginScreen").style.display = "none";
+  document.getElementById("dashboard").style.display = "block";
+
+  try {
+    const payload = JSON.parse(atob(TOKEN.split('.')[1]));
+
+    document.getElementById("userEmail").innerText = payload.sub;
+    document.getElementById("profileEmail").innerText = payload.sub;
+
+    loadUsers();
+
+  } catch(err) {
+    console.error(err);
+    logout();
+  }
 }
 
-/* SHOW USER */
-function parseJwt (t) {
-  return JSON.parse(atob(t.split('.')[1]));
-}
-
-const user = parseJwt(TOKEN);
-document.getElementById("userEmail").innerText = user.sub;
-document.getElementById("profileEmail").innerText = user.sub;
-
-/* LOAD USERS */
+// LOAD USERS
 function loadUsers() {
   fetch(API + "/users", {
-    headers: { "Authorization": "Bearer " + TOKEN }
+    headers: {
+      "Authorization": "Bearer " + TOKEN
+    }
   })
   .then(res => res.json())
   .then(data => {
+
     let rows = "";
-    data.forEach(u => {
+
+    data.forEach(user => {
       rows += `
         <tr>
-          <td>${u.name}</td>
-          <td>${u.email}</td>
+          <td>${user.name}</td>
+          <td>${user.email}</td>
           <td>
-            <button class="delete" onclick="deleteUser(${u.id})">X</button>
+            <button class="delete-btn" onclick="deleteUser(${user.id})">
+              Delete
+            </button>
           </td>
-        </tr>`;
+        </tr>
+      `;
     });
+
     document.getElementById("userList").innerHTML = rows;
-  });
+  })
+  .catch(err => console.error(err));
 }
 
-/* 🔥 FIXED ADD USER */
+// ADD USER
 function addUser() {
-  const nameVal = document.getElementById("name").value;
-  const emailVal = document.getElementById("email").value;
 
-  console.log("Sending:", nameVal, emailVal);
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+
+  if (!name || !email) {
+    alert("Enter name and email");
+    return;
+  }
 
   fetch(API + "/users", {
     method: "POST",
@@ -181,48 +355,70 @@ function addUser() {
       "Authorization": "Bearer " + TOKEN
     },
     body: JSON.stringify({
-      name: nameVal,
-      email: emailVal
+      name: name,
+      email: email
     })
   })
-  .then(res => res.json().then(data => ({ status: res.status, body: data })))
-  .then(result => {
-    console.log("Response:", result);
+  .then(res => res.json())
+  .then(data => {
 
-    if (result.status === 200) {
-      alert("✅ User added");
-      loadUsers();
-    } else {
-      alert("❌ Error: " + (result.body.error || "Unknown error"));
+    if (data.error) {
+      alert(data.error);
+      return;
     }
+
+    document.getElementById("name").value = "";
+    document.getElementById("email").value = "";
+
+    loadUsers();
   })
   .catch(err => {
     console.error(err);
-    alert("❌ Network error");
+    alert("Error adding user");
   });
 }
 
-/* DELETE */
+// DELETE USER
 function deleteUser(id) {
+
   fetch(API + "/users/" + id, {
     method: "DELETE",
-    headers: { "Authorization": "Bearer " + TOKEN }
-  }).then(loadUsers);
+    headers: {
+      "Authorization": "Bearer " + TOKEN
+    }
+  })
+  .then(() => loadUsers())
+  .catch(err => console.error(err));
 }
 
-/* PROFILE */
+// PROFILE
 function showProfile() {
   document.getElementById("usersSection").style.display = "none";
   document.getElementById("profileSection").style.display = "block";
 }
 
-/* LOGOUT */
+// LOGOUT
 function logout() {
   localStorage.removeItem("token");
-  location.reload();
+  window.location.href = "/";
 }
 
 </script>
 
 </body>
 </html>
+```
+
+After replacing:
+
+```bash
+git add index.html
+git commit -m "restore working app"
+git push
+```
+
+Then wait for Render auto deploy and refresh your app with:
+
+```text
+Ctrl + Shift + R
+```
