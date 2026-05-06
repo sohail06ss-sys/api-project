@@ -2,307 +2,324 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI SaaS Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI SaaS Dashboard</title>
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
+<style>
 
-        body {
-            background: #f3f4f6;
-        }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
 
-        .hidden {
-            display: none !important;
-        }
+body{
+    background:#f3f4f6;
+}
 
-        /* AUTH */
+.hidden{
+    display:none !important;
+}
 
-        .auth-page {
-            width: 100%;
-            height: 100vh;
-            background:
-                linear-gradient(135deg, #0f172a, #1e3a8a);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+/* AUTH */
 
-        .auth-card {
-            width: 400px;
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        }
+.auth-page{
+    width:100%;
+    height:100vh;
+    background:linear-gradient(135deg,#0f172a,#1e3a8a);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
 
-        .auth-card h1 {
-            text-align: center;
-            margin-bottom: 10px;
-        }
+.auth-card{
+    width:420px;
+    background:white;
+    border-radius:20px;
+    padding:40px;
+    box-shadow:0 20px 40px rgba(0,0,0,0.2);
+}
 
-        .auth-card p {
-            text-align: center;
-            color: gray;
-            margin-bottom: 25px;
-        }
+.auth-card h1{
+    text-align:center;
+    margin-bottom:10px;
+}
 
-        .auth-card input {
-            width: 100%;
-            padding: 14px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            font-size: 15px;
-        }
+.auth-card p{
+    text-align:center;
+    color:gray;
+    margin-bottom:25px;
+}
 
-        .btn {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 15px;
-            margin-bottom: 15px;
-            color: white;
-        }
+.auth-card input{
+    width:100%;
+    padding:14px;
+    margin-bottom:15px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    font-size:15px;
+}
 
-        .blue {
-            background: #2563eb;
-        }
+.btn{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:15px;
+    margin-bottom:15px;
+    color:white;
+}
 
-        .red {
-            background: #ea4335;
-        }
+.blue{
+    background:#2563eb;
+}
 
-        .switch {
-            text-align: center;
-            margin-top: 15px;
-        }
+.red{
+    background:#ea4335;
+}
 
-        .switch span {
-            color: #2563eb;
-            cursor: pointer;
-            font-weight: bold;
-        }
+.switch{
+    text-align:center;
+}
 
-        /* DASHBOARD */
+.switch span{
+    color:#2563eb;
+    font-weight:bold;
+    cursor:pointer;
+}
 
-        .dashboard {
-            display: none;
-        }
+/* DASHBOARD */
 
-        .layout {
-            display: flex;
-            min-height: 100vh;
-        }
+.dashboard{
+    display:none;
+}
 
-        .sidebar {
-            width: 240px;
-            background: #0f172a;
-            color: white;
-            padding: 25px;
-        }
+.layout{
+    display:flex;
+    min-height:100vh;
+}
 
-        .logo {
-            font-size: 30px;
-            font-weight: bold;
-            margin-bottom: 40px;
-        }
+.sidebar{
+    width:240px;
+    background:#0f172a;
+    color:white;
+    padding:25px;
+}
 
-        .menu-btn {
-            width: 100%;
-            padding: 14px;
-            margin-bottom: 15px;
-            border: none;
-            border-radius: 10px;
-            background: #1e293b;
-            color: white;
-            cursor: pointer;
-            text-align: left;
-        }
+.logo{
+    font-size:32px;
+    font-weight:bold;
+    margin-bottom:40px;
+}
 
-        .main {
-            flex: 1;
-        }
+.menu-btn{
+    width:100%;
+    padding:14px;
+    margin-bottom:15px;
+    border:none;
+    border-radius:10px;
+    background:#1e293b;
+    color:white;
+    cursor:pointer;
+    text-align:left;
+    font-size:15px;
+}
 
-        .navbar {
-            background: white;
-            padding: 20px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
+.main{
+    flex:1;
+}
 
-        .profile-top {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+.navbar{
+    background:white;
+    padding:20px 30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
 
-        .profile-top img {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
+.profile-top{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
 
-        .logout-btn {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 8px;
-            background: #ef4444;
-            color: white;
-            cursor: pointer;
-        }
+.profile-top img{
+    width:45px;
+    height:45px;
+    border-radius:50%;
+    object-fit:cover;
+}
 
-        .content {
-            padding: 30px;
-        }
+.logout-btn{
+    padding:10px 16px;
+    border:none;
+    border-radius:8px;
+    background:#ef4444;
+    color:white;
+    cursor:pointer;
+}
 
-        .card {
-            background: white;
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        }
+.content{
+    padding:30px;
+}
 
-        .card h2 {
-            margin-bottom: 20px;
-        }
+.card{
+    background:white;
+    border-radius:20px;
+    padding:25px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.05);
+}
 
-        .form-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
+.card h2{
+    margin-bottom:20px;
+}
 
-        .form-row input {
-            flex: 1;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-        }
+.form-row{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+}
 
-        .add-btn {
-            background: #10b981;
-            color: white;
-            border: none;
-            padding: 12px 18px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
+.form-row input{
+    flex:1;
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:8px;
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+.add-btn{
+    background:#10b981;
+    color:white;
+    border:none;
+    padding:12px 18px;
+    border-radius:8px;
+    cursor:pointer;
+}
 
-        th {
-            background: #f8fafc;
-            text-align: left;
-            padding: 14px;
-        }
+table{
+    width:100%;
+    border-collapse:collapse;
+}
 
-        td {
-            padding: 14px;
-            border-top: 1px solid #eee;
-        }
+th{
+    background:#f8fafc;
+    padding:14px;
+    text-align:left;
+}
 
-        .edit-btn {
-            background: #3b82f6;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-right: 5px;
-        }
+td{
+    padding:14px;
+    border-top:1px solid #eee;
+}
 
-        .delete-btn {
-            background: #ef4444;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-        }
+.user-info{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
 
-        .profile-page {
-            display: none;
-        }
+.user-info img{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    object-fit:cover;
+}
 
-        .profile-card {
-            text-align: center;
-        }
+.edit-btn{
+    background:#3b82f6;
+    color:white;
+    border:none;
+    padding:8px 12px;
+    border-radius:6px;
+    cursor:pointer;
+    margin-right:5px;
+}
 
-        .profile-card img {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            margin-bottom: 20px;
-        }
-    </style>
+.delete-btn{
+    background:#ef4444;
+    color:white;
+    border:none;
+    padding:8px 12px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.profile-page{
+    display:none;
+}
+
+.profile-card{
+    text-align:center;
+}
+
+.profile-card img{
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    object-fit:cover;
+    margin-bottom:20px;
+}
+
+.profile-card p{
+    margin-top:10px;
+    color:#444;
+}
+
+</style>
 </head>
 
 <body>
 
-<!-- AUTH PAGE -->
+<!-- AUTH -->
 
 <div class="auth-page" id="authPage">
 
-    <div class="auth-card">
+<div class="auth-card">
 
-        <h1 id="title">🚀 Login</h1>
+<h1 id="authTitle">🚀 Login</h1>
 
-        <p id="subtitle">Welcome back</p>
+<p id="authSubtitle">Welcome back</p>
 
-        <input type="text"
-               id="nameInput"
-               placeholder="Name"
-               class="hidden">
+<input type="text"
+id="nameInput"
+placeholder="Name"
+class="hidden">
 
-        <input type="email"
-               id="emailInput"
-               placeholder="Email">
+<input type="email"
+id="emailInput"
+placeholder="Email">
 
-        <input type="password"
-               id="passwordInput"
-               placeholder="Password">
+<input type="password"
+id="passwordInput"
+placeholder="Password">
 
-        <button class="btn blue"
-                id="mainBtn"
-                onclick="login()">
+<button class="btn blue"
+id="mainBtn"
+onclick="login()">
+Login
+</button>
 
-            Login
+<button class="btn red"
+onclick="googleLogin()">
+Continue with Google
+</button>
 
-        </button>
+<div class="switch"
+id="switchText">
 
-        <button class="btn red"
-                onclick="googleLogin()">
+Don't have account?
 
-            Continue with Google
+<span onclick="toggleAuth()">
+Register
+</span>
 
-        </button>
+</div>
 
-        <div class="switch" id="switchBox">
-
-            Don't have account?
-
-            <span onclick="toggleAuth()">
-                Register
-            </span>
-
-        </div>
-
-    </div>
+</div>
 
 </div>
 
@@ -310,134 +327,139 @@
 
 <div class="dashboard" id="dashboard">
 
-    <div class="layout">
+<div class="layout">
 
-        <!-- SIDEBAR -->
+<!-- SIDEBAR -->
 
-        <div class="sidebar">
+<div class="sidebar">
 
-            <div class="logo">
-                🚀 SaaS
-            </div>
+<div class="logo">
+🚀 SaaS
+</div>
 
-            <button class="menu-btn"
-                    onclick="showUsers()">
+<button class="menu-btn"
+onclick="showUsers()">
+👥 Users
+</button>
 
-                👥 Users
+<button class="menu-btn"
+onclick="showProfile()">
+👤 Profile
+</button>
 
-            </button>
+</div>
 
-            <button class="menu-btn"
-                    onclick="showProfile()">
+<!-- MAIN -->
 
-                👤 Profile
+<div class="main">
 
-            </button>
+<div class="navbar">
 
-        </div>
+<h2>Dashboard</h2>
 
-        <!-- MAIN -->
+<div class="profile-top">
 
-        <div class="main">
+<img id="topPic"
+src="https://cdn-icons-png.flaticon.com/512/149/149071.png">
 
-            <!-- NAVBAR -->
+<div>
+<div id="topName"></div>
+<div id="topEmail"
+style="font-size:13px;color:gray;">
+</div>
+</div>
 
-            <div class="navbar">
+<button class="logout-btn"
+onclick="logout()">
+Logout
+</button>
 
-                <h2>Dashboard</h2>
+</div>
 
-                <div class="profile-top">
+</div>
 
-                    <img id="topPic"
-                         src="https://cdn-icons-png.flaticon.com/512/149/149071.png">
+<div class="content">
 
-                    <span id="topEmail"></span>
+<!-- USERS -->
 
-                    <button class="logout-btn"
-                            onclick="logout()">
+<div id="usersPage">
 
-                        Logout
+<div class="card">
 
-                    </button>
+<h2>Users</h2>
 
-                </div>
+<div class="form-row">
 
-            </div>
+<input type="text"
+id="userName"
+placeholder="Name">
 
-            <!-- CONTENT -->
+<input type="email"
+id="userEmail"
+placeholder="Email">
 
-            <div class="content">
+<button class="add-btn"
+onclick="addUser()">
+Add User
+</button>
 
-                <!-- USERS -->
+</div>
 
-                <div id="usersPage">
+<table>
 
-                    <div class="card">
+<thead>
 
-                        <h2>Users</h2>
+<tr>
+<th>User</th>
+<th>Email</th>
+<th>Actions</th>
+</tr>
 
-                        <div class="form-row">
+</thead>
 
-                            <input type="text"
-                                   id="userName"
-                                   placeholder="Name">
+<tbody id="userTable"></tbody>
 
-                            <input type="email"
-                                   id="userEmail"
-                                   placeholder="Email">
+</table>
 
-                            <button class="add-btn"
-                                    onclick="addUser()">
+</div>
 
-                                Add User
+</div>
 
-                            </button>
+<!-- PROFILE -->
 
-                        </div>
+<div class="profile-page"
+id="profilePage">
 
-                        <table>
+<div class="card profile-card">
 
-                            <thead>
+<img id="profilePic"
+src="https://cdn-icons-png.flaticon.com/512/149/149071.png">
 
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Action</th>
-                                </tr>
+<h2 id="profileName">
+User
+</h2>
 
-                            </thead>
+<p>
+<strong>Email:</strong>
+<span id="profileEmail"></span>
+</p>
 
-                            <tbody id="userTable"></tbody>
+<p>
+<strong>Mobile:</strong>
+<span id="profileMobile">
+Not Added
+</span>
+</p>
 
-                        </table>
+</div>
 
-                    </div>
+</div>
 
-                </div>
+</div>
 
-                <!-- PROFILE -->
+</div>
 
-                <div class="profile-page"
-                     id="profilePage">
-
-                    <div class="card profile-card">
-
-                        <img id="profilePic"
-                             src="https://cdn-icons-png.flaticon.com/512/149/149071.png">
-
-                        <h2 id="profileName"></h2>
-
-                        <p id="profileEmail"></p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
+</div>
 
 </div>
 
@@ -473,7 +495,7 @@ if(TOKEN){
     showDashboard();
 }
 
-/* TOGGLE LOGIN/REGISTER */
+/* TOGGLE */
 
 function toggleAuth(){
 
@@ -481,10 +503,10 @@ function toggleAuth(){
 
     if(isRegister){
 
-        document.getElementById("title")
+        document.getElementById("authTitle")
             .innerText = "📝 Register";
 
-        document.getElementById("subtitle")
+        document.getElementById("authSubtitle")
             .innerText = "Create account";
 
         document.getElementById("nameInput")
@@ -496,19 +518,19 @@ function toggleAuth(){
         document.getElementById("mainBtn")
             .onclick = register;
 
-        document.getElementById("switchBox")
+        document.getElementById("switchText")
             .innerHTML =
             `Already have account?
-             <span onclick="toggleAuth()">
-                Login
-             </span>`;
+            <span onclick="toggleAuth()">
+            Login
+            </span>`;
 
     }else{
 
-        document.getElementById("title")
+        document.getElementById("authTitle")
             .innerText = "🚀 Login";
 
-        document.getElementById("subtitle")
+        document.getElementById("authSubtitle")
             .innerText = "Welcome back";
 
         document.getElementById("nameInput")
@@ -520,12 +542,12 @@ function toggleAuth(){
         document.getElementById("mainBtn")
             .onclick = login;
 
-        document.getElementById("switchBox")
+        document.getElementById("switchText")
             .innerHTML =
             `Don't have account?
-             <span onclick="toggleAuth()">
-                Register
-             </span>`;
+            <span onclick="toggleAuth()">
+            Register
+            </span>`;
     }
 }
 
@@ -533,7 +555,7 @@ function toggleAuth(){
 
 function register(){
 
-    fetch(API + "/register", {
+    fetch(API + "/register",{
 
         method:"POST",
 
@@ -572,7 +594,7 @@ function register(){
 
 function login(){
 
-    fetch(API + "/login", {
+    fetch(API + "/login",{
 
         method:"POST",
 
@@ -602,11 +624,6 @@ function login(){
                 data.token
             );
 
-            localStorage.setItem(
-                "picture",
-                data.picture || ""
-            );
-
             location.reload();
 
         }else{
@@ -621,7 +638,7 @@ function login(){
 function googleLogin(){
 
     window.location.href =
-        API + "/google_login";
+    API + "/google_login";
 }
 
 /* DASHBOARD */
@@ -634,7 +651,7 @@ function showDashboard(){
     document.getElementById("dashboard")
         .style.display = "block";
 
-    fetch(API + "/me", {
+    fetch(API + "/me",{
 
         headers:{
             "Authorization":
@@ -647,14 +664,27 @@ function showDashboard(){
 
     .then(user=>{
 
-        document.getElementById("topEmail")
-            .innerText = user.email;
+        document.getElementById("topName")
+            .innerText =
+            user.name || "User";
 
-        document.getElementById("profileEmail")
-            .innerText = user.email;
+        document.getElementById("topEmail")
+            .innerText =
+            user.email || "";
 
         document.getElementById("profileName")
-            .innerText = user.name;
+            .innerText =
+            user.name || "User";
+
+        document.getElementById("profileEmail")
+            .innerText =
+            user.email || "";
+
+        if(user.mobile){
+
+            document.getElementById("profileMobile")
+                .innerText = user.mobile;
+        }
 
         if(user.picture){
 
@@ -669,11 +699,11 @@ function showDashboard(){
     });
 }
 
-/* LOAD USERS */
+/* USERS */
 
 function loadUsers(){
 
-    fetch(API + "/users", {
+    fetch(API + "/users",{
 
         headers:{
             "Authorization":
@@ -693,32 +723,47 @@ function loadUsers(){
             rows += `
             <tr>
 
-                <td>${user.name}</td>
+            <td>
 
-                <td>${user.email}</td>
+            <div class="user-info">
 
-                <td>
+            <img src="${
+                user.picture ||
+                'https://cdn-icons-png.flaticon.com/512/149/149071.png'
+            }">
 
-                    <button class="edit-btn"
-                        onclick="editUser(
-                        ${user.id},
-                        '${user.name}',
-                        '${user.email}')">
+            <div>${user.name}</div>
 
-                        Edit
+            </div>
 
-                    </button>
+            </td>
 
-                    <button class="delete-btn"
-                        onclick="deleteUser(${user.id})">
+            <td>${user.email}</td>
 
-                        Delete
+            <td>
 
-                    </button>
+            <button class="edit-btn"
+            onclick="editUser(
+            ${user.id},
+            '${user.name}',
+            '${user.email}'
+            )">
 
-                </td>
+            Edit
 
-            </tr>`;
+            </button>
+
+            <button class="delete-btn"
+            onclick="deleteUser(${user.id})">
+
+            Delete
+
+            </button>
+
+            </td>
+
+            </tr>
+            `;
         });
 
         document.getElementById("userTable")
@@ -730,7 +775,7 @@ function loadUsers(){
 
 function addUser(){
 
-    fetch(API + "/users", {
+    fetch(API + "/users",{
 
         method:"POST",
 
@@ -765,7 +810,7 @@ function addUser(){
 
 function deleteUser(id){
 
-    fetch(API + "/users/" + id, {
+    fetch(API + "/users/" + id,{
 
         method:"DELETE",
 
@@ -784,14 +829,14 @@ function deleteUser(id){
 function editUser(id,name,email){
 
     const newName =
-        prompt("Enter new name",name);
+    prompt("Enter name",name);
 
     const newEmail =
-        prompt("Enter new email",email);
+    prompt("Enter email",email);
 
     if(!newName || !newEmail) return;
 
-    fetch(API + "/users/" + id, {
+    fetch(API + "/users/" + id,{
 
         method:"PUT",
 
@@ -802,6 +847,7 @@ function editUser(id,name,email){
         },
 
         body:JSON.stringify({
+
             name:newName,
             email:newEmail
         })
@@ -835,7 +881,7 @@ function showProfile(){
 
 function logout(){
 
-    localStorage.clear();
+    localStorage.removeItem("token");
 
     window.location.href = "/";
 }
