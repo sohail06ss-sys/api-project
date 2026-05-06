@@ -30,7 +30,7 @@ jwt = JWTManager(app)
 
 # ---------------- ADMIN EMAIL ----------------
 
-ADMIN_EMAIL = "YOUR_EMAIL@gmail.com"
+ADMIN_EMAIL = "YOUR_sohail06.ss@gmail.com"
 
 # ---------------- GOOGLE CONFIG ----------------
 
