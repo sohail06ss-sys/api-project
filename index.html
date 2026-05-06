@@ -269,6 +269,27 @@ td{
     color:#444;
 }
 
+.mobile-box{
+    margin-top:25px;
+}
+
+.mobile-box input{
+    padding:12px;
+    width:260px;
+    border:1px solid #ddd;
+    border-radius:8px;
+}
+
+.mobile-btn{
+    padding:12px 18px;
+    border:none;
+    background:#10b981;
+    color:white;
+    border-radius:8px;
+    cursor:pointer;
+    margin-left:10px;
+}
+
 </style>
 </head>
 
@@ -451,6 +472,21 @@ Not Added
 </span>
 </p>
 
+<div class="mobile-box">
+
+<input
+type="text"
+id="mobileInput"
+placeholder="Enter mobile number"
+>
+
+<button
+class="mobile-btn"
+onclick="saveMobile()"
+>
+Save Mobile
+</button>
+
 </div>
 
 </div>
@@ -518,13 +554,6 @@ function toggleAuth(){
         document.getElementById("mainBtn")
             .onclick = register;
 
-        document.getElementById("switchText")
-            .innerHTML =
-            `Already have account?
-            <span onclick="toggleAuth()">
-            Login
-            </span>`;
-
     }else{
 
         document.getElementById("authTitle")
@@ -541,13 +570,6 @@ function toggleAuth(){
 
         document.getElementById("mainBtn")
             .onclick = login;
-
-        document.getElementById("switchText")
-            .innerHTML =
-            `Don't have account?
-            <span onclick="toggleAuth()">
-            Register
-            </span>`;
     }
 }
 
@@ -855,6 +877,43 @@ function editUser(id,name,email){
     })
 
     .then(()=>loadUsers());
+}
+
+/* SAVE MOBILE */
+
+function saveMobile(){
+
+    const mobile =
+    document.getElementById("mobileInput").value;
+
+    fetch(API + "/update_mobile", {
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json",
+            "Authorization":
+            "Bearer " + TOKEN
+        },
+
+        body:JSON.stringify({
+            mobile:mobile
+        })
+
+    })
+
+    .then(r=>r.json())
+
+    .then(data=>{
+
+        alert(data.message);
+
+        document.getElementById("profileMobile")
+            .innerText = mobile;
+
+        document.getElementById("mobileInput")
+            .value = "";
+    });
 }
 
 /* NAVIGATION */

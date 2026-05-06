@@ -436,6 +436,37 @@ def update_user(id):
         "message": "Updated"
     })
 
+# ---------------- UPDATE MOBILE ----------------
+
+@app.route('/update_mobile', methods=['POST'])
+@jwt_required()
+def update_mobile():
+
+    current_email = get_jwt_identity()
+
+    data = request.get_json()
+
+    mobile = data.get("mobile")
+
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        UPDATE users
+        SET mobile=?
+        WHERE email=?
+        """,
+        (mobile, current_email)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return jsonify({
+        "message": "Mobile updated successfully"
+    })
+
 # ---------------- RUN ----------------
 
 if __name__ == "__main__":
