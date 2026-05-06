@@ -1,659 +1,767 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SaaS CRM Dashboard</title>
+    <title>AI SaaS Dashboard</title>
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    body {
-      background: #f3f4f6;
-      color: #111827;
-    }
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial;
+        }
 
-    .hidden {
-      display: none !important;
-    }
+        body {
+            background: #f4f7fb;
+        }
 
-    /* LOGIN */
-    .auth-container {
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: linear-gradient(135deg,#0f172a,#1e3a8a);
-      padding: 20px;
-    }
+        .auth-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background:
+                linear-gradient(135deg, #0f172a, #1e3a8a);
+        }
 
-    .auth-card {
-      width: 400px;
-      background: white;
-      border-radius: 18px;
-      padding: 40px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    }
+        .auth-box {
+            width: 400px;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
 
-    .auth-card h1 {
-      text-align: center;
-      margin-bottom: 10px;
-      font-size: 34px;
-    }
+        .auth-box h1 {
+            margin-bottom: 10px;
+            color: #0f172a;
+        }
 
-    .auth-card p {
-      text-align: center;
-      color: #6b7280;
-      margin-bottom: 30px;
-    }
+        .auth-box p {
+            color: gray;
+            margin-bottom: 25px;
+        }
 
-    .auth-card input {
-      width: 100%;
-      padding: 14px;
-      margin-bottom: 15px;
-      border: 1px solid #d1d5db;
-      border-radius: 10px;
-      font-size: 15px;
-    }
+        .auth-box input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
 
-    .primary-btn {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 10px;
-      background: #2563eb;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-      margin-bottom: 15px;
-      font-weight: bold;
-    }
+        .auth-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
 
-    .primary-btn:hover {
-      background: #1d4ed8;
-    }
+        .login-btn {
+            background: #2563eb;
+        }
 
-    .google-btn {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 10px;
-      background: #ea4335;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-      font-weight: bold;
-    }
+        .google-btn {
+            background: #ea4335;
+        }
 
-    .switch-text {
-      text-align: center;
-      margin-top: 20px;
-      color: #4b5563;
-    }
+        .switch {
+            color: #2563eb;
+            cursor: pointer;
+            font-weight: bold;
+        }
 
-    .switch-text span {
-      color: #2563eb;
-      cursor: pointer;
-      font-weight: bold;
-    }
+        /* DASHBOARD */
 
-    /* DASHBOARD */
-    #dashboard {
-      display: none;
-    }
+        .dashboard {
+            display: none;
+            width: 100%;
+            height: 100vh;
+        }
 
-    .layout {
-      display: flex;
-      min-height: 100vh;
-    }
+        .sidebar {
+            width: 250px;
+            background: #0f172a;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            padding: 30px 20px;
+        }
 
-    .sidebar {
-      width: 250px;
-      background: #111827;
-      color: white;
-      padding: 25px;
-    }
+        .logo {
+            font-size: 30px;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
 
-    .logo {
-      font-size: 30px;
-      font-weight: bold;
-      margin-bottom: 40px;
-    }
+        .menu button {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 12px;
+            background: #1e293b;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
 
-    .menu-btn {
-      width: 100%;
-      padding: 14px;
-      margin-bottom: 12px;
-      border: none;
-      border-radius: 10px;
-      background: #1f2937;
-      color: white;
-      cursor: pointer;
-      font-size: 15px;
-      text-align: left;
-    }
+        .main {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+        }
 
-    .menu-btn:hover {
-      background: #374151;
-    }
+        .navbar {
+            background: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
 
-    .main {
-      flex: 1;
-    }
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
 
-    .navbar {
-      background: white;
-      padding: 18px 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
+        .profile img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+        }
 
-    .profile-box {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
+        .logout-btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 10px;
+            background: #ef4444;
+            color: white;
+            cursor: pointer;
+        }
 
-    .profile-box img {
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid #2563eb;
-    }
+        .content {
+            padding: 30px;
+        }
 
-    .logout-btn {
-      padding: 10px 16px;
-      border: none;
-      border-radius: 8px;
-      background: #ef4444;
-      color: white;
-      cursor: pointer;
-    }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
 
-    .content {
-      padding: 30px;
-    }
+        .users-top {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
 
-    .card {
-      background: white;
-      border-radius: 16px;
-      padding: 25px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
+        .users-top input {
+            flex: 1;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
 
-    .card h2 {
-      margin-bottom: 20px;
-    }
+        .add-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
 
-    .form-row {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-    .form-row input {
-      flex: 1;
-      padding: 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-    }
+        th {
+            text-align: left;
+            background: #f8fafc;
+            padding: 15px;
+        }
 
-    .add-btn {
-      background: #10b981;
-      color: white;
-      border: none;
-      padding: 12px 18px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
+        td {
+            padding: 15px;
+            border-top: 1px solid #eee;
+        }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
+        .delete-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
 
-    th, td {
-      padding: 14px;
-      border-bottom: 1px solid #e5e7eb;
-      text-align: left;
-    }
+        .edit-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
 
-    th {
-      background: #f9fafb;
-    }
+        #profilePage {
+            display: none;
+        }
 
-    .delete-btn {
-      background: #ef4444;
-      color: white;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-right: 6px;
-    }
+        .profile-card {
+            text-align: center;
+        }
 
-    .edit-btn {
-      background: #2563eb;
-      color: white;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
+        .profile-card img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+        }
 
-    .profile-card {
-      text-align: center;
-    }
+        @media(max-width:900px){
 
-    .profile-card img {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-bottom: 20px;
-      border: 4px solid #2563eb;
-    }
+            .sidebar{
+                width:100%;
+                height:auto;
+                position:relative;
+            }
 
-    @media(max-width:900px) {
-      .layout {
-        flex-direction: column;
-      }
+            .main{
+                margin-left:0;
+                width:100%;
+            }
 
-      .sidebar {
-        width: 100%;
-      }
+            .dashboard{
+                flex-direction:column;
+            }
 
-      .form-row {
-        flex-direction: column;
-      }
-    }
-  </style>
+            .users-top{
+                flex-direction:column;
+            }
+        }
+
+    </style>
 </head>
+
 <body>
 
-<!-- LOGIN PAGE -->
-<div id="loginPage" class="auth-container">
+<!-- LOGIN -->
+<div class="auth-container" id="authPage">
 
-  <!-- LOGIN -->
-  <div class="auth-card" id="loginCard">
-    <h1>🚀 SaaS App</h1>
-    <p>Login to continue</p>
+    <div class="auth-box">
 
-    <input type="text" id="loginUsername" placeholder="Username">
-    <input type="password" id="loginPassword" placeholder="Password">
+        <h1 id="authTitle">🚀 Login</h1>
 
-    <button class="primary-btn" onclick="login()">
-      Login
-    </button>
+        <p id="authSub">Welcome back</p>
 
-    <button class="google-btn" onclick="googleLogin()">
-      Continue with Google
-    </button>
+        <input type="text" id="nameInput" placeholder="Name" style="display:none;">
 
-    <div class="switch-text">
-      Don't have an account?
-      <span onclick="showRegister()">Register</span>
+        <input type="email" id="emailInput" placeholder="Email">
+
+        <input type="password" id="passwordInput" placeholder="Password">
+
+        <button class="auth-btn login-btn" id="mainBtn" onclick="login()">
+            Login
+        </button>
+
+        <button class="auth-btn google-btn" onclick="googleLogin()">
+            Continue with Google
+        </button>
+
+        <p id="switchText">
+            Don't have account?
+            <span class="switch" onclick="switchAuth()">
+                Register
+            </span>
+        </p>
+
     </div>
-  </div>
 
-  <!-- REGISTER -->
-  <div class="auth-card hidden" id="registerCard">
-    <h1>📝 Register</h1>
-    <p>Create new account</p>
-
-    <input type="text" id="registerUsername" placeholder="Username">
-    <input type="password" id="registerPassword" placeholder="Password">
-
-    <button class="primary-btn" onclick="register()">
-      Register
-    </button>
-
-    <button class="google-btn" onclick="googleLogin()">
-      Register with Google
-    </button>
-
-    <div class="switch-text">
-      Already have an account?
-      <span onclick="showLogin()">Login</span>
-    </div>
-  </div>
 </div>
 
 <!-- DASHBOARD -->
-<div id="dashboard">
-  <div class="layout">
+<div class="dashboard" id="dashboard">
 
+    <!-- SIDEBAR -->
     <div class="sidebar">
-      <div class="logo">🚀 SaaS</div>
 
-      <button class="menu-btn" onclick="showUsers()">
-        👥 Users
-      </button>
+        <div class="logo">
+            🚀 SaaS
+        </div>
 
-      <button class="menu-btn" onclick="showProfile()">
-        👤 Profile
-      </button>
+        <div class="menu">
+
+            <button onclick="showUsers()">
+                Users
+            </button>
+
+            <button onclick="showProfile()">
+                Profile
+            </button>
+
+        </div>
+
     </div>
 
+    <!-- MAIN -->
     <div class="main">
 
-      <div class="navbar">
-        <h2>Dashboard</h2>
+        <!-- NAVBAR -->
+        <div class="navbar">
 
-        <div class="profile-box">
-          <img id="navProfileImage" src="https://i.imgur.com/HeIi0wU.png">
-          <span id="navEmail"></span>
-          <button class="logout-btn" onclick="logout()">
-            Logout
-          </button>
-        </div>
-      </div>
+            <h2>Dashboard</h2>
 
-      <div class="content">
+            <div class="profile">
 
-        <!-- USERS -->
-        <div id="usersSection" class="card">
-          <h2>Users Management</h2>
+                <img id="topProfilePic"
+                    src="https://cdn-icons-png.flaticon.com/512/149/149071.png">
 
-          <div class="form-row">
-            <input type="text" id="name" placeholder="Enter Name">
-            <input type="email" id="email" placeholder="Enter Email">
-            <button class="add-btn" onclick="addUser()">
-              Add User
-            </button>
-          </div>
+                <span id="topEmail"></span>
 
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
+                <button class="logout-btn" onclick="logout()">
+                    Logout
+                </button>
 
-            <tbody id="userList"></tbody>
-          </table>
+            </div>
+
         </div>
 
-        <!-- PROFILE -->
-        <div id="profileSection" class="card hidden">
-          <div class="profile-card">
-            <img id="profileImage" src="https://i.imgur.com/HeIi0wU.png">
+        <!-- CONTENT -->
+        <div class="content">
 
-            <h2 id="profileName">User</h2>
-            <p id="profileEmail"></p>
-          </div>
+            <!-- USERS -->
+            <div id="usersPage">
+
+                <div class="card">
+
+                    <h2 style="margin-bottom:20px;">Users</h2>
+
+                    <div class="users-top">
+
+                        <input id="userName" placeholder="Name">
+
+                        <input id="userEmail" placeholder="Email">
+
+                        <button class="add-btn" onclick="addUser()">
+                            Add User
+                        </button>
+
+                    </div>
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="userTable"></tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+            <!-- PROFILE -->
+            <div id="profilePage">
+
+                <div class="card profile-card">
+
+                    <img id="profilePic"
+                        src="https://cdn-icons-png.flaticon.com/512/149/149071.png">
+
+                    <h2 id="profileName"></h2>
+
+                    <p id="profileEmail"></p>
+
+                </div>
+
+            </div>
+
         </div>
 
-      </div>
     </div>
-  </div>
+
 </div>
 
 <script>
 
 const API = "https://api-project-e4fn.onrender.com";
 
-// HANDLE TOKEN
-const params = new URLSearchParams(window.location.search);
-
-if (params.get("token")) {
-  localStorage.setItem("token", params.get("token"));
-  window.history.replaceState({}, document.title, "/");
-}
+let isRegister = false;
 
 let TOKEN = localStorage.getItem("token");
 
-// INITIAL LOAD
-window.onload = () => {
+const params = new URLSearchParams(window.location.search);
 
-  if (TOKEN) {
-    openDashboard();
-  } else {
-    openLogin();
-  }
+if (params.get("token")) {
+
+    localStorage.setItem("token", params.get("token"));
+
+    window.location.href = "/";
 }
 
-// LOGIN PAGE
-function openLogin() {
-  document.getElementById("loginPage").style.display = "flex";
-  document.getElementById("dashboard").style.display = "none";
+/* AUTO LOGIN */
+
+if (TOKEN) {
+
+    showDashboard();
+
 }
 
-// DASHBOARD
-function openDashboard() {
+/* SWITCH LOGIN REGISTER */
 
-  document.getElementById("loginPage").style.display = "none";
-  document.getElementById("dashboard").style.display = "block";
+function switchAuth(){
 
-  try {
+    isRegister = !isRegister;
 
-    const payload = JSON.parse(atob(TOKEN.split('.')[1]));
+    if(isRegister){
 
-    const email = payload.sub;
+        document.getElementById("authTitle").innerText = "📝 Register";
 
-    document.getElementById("navEmail").innerText = email;
-    document.getElementById("profileEmail").innerText = email;
-    document.getElementById("profileName").innerText = email.split('@')[0];
+        document.getElementById("authSub").innerText =
+            "Create new account";
 
-    loadUsers();
+        document.getElementById("nameInput").style.display = "block";
 
-  } catch(err) {
-    console.error(err);
-    logout();
-  }
-}
+        document.getElementById("mainBtn").innerText = "Register";
 
-// GOOGLE LOGIN
-function googleLogin() {
-  window.location.href = API + "/google_login";
-}
+        document.getElementById("mainBtn").onclick = register;
 
-// SHOW LOGIN
-function showLogin() {
-  document.getElementById("loginCard").classList.remove("hidden");
-  document.getElementById("registerCard").classList.add("hidden");
-}
+        document.getElementById("switchText").innerHTML =
+            `Already have account?
+             <span class="switch" onclick="switchAuth()">
+                Login
+             </span>`;
 
-// SHOW REGISTER
-function showRegister() {
-  document.getElementById("registerCard").classList.remove("hidden");
-  document.getElementById("loginCard").classList.add("hidden");
-}
+    }else{
 
-// REGISTER
-function register() {
+        document.getElementById("authTitle").innerText = "🚀 Login";
 
-  const username = document.getElementById("registerUsername").value;
-  const password = document.getElementById("registerPassword").value;
+        document.getElementById("authSub").innerText =
+            "Welcome back";
 
-  fetch(API + "/register", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      username,
-      password
-    })
-  })
-  .then(res => res.json())
-  .then(data => {
-    alert(data.message || "Registered successfully");
-    showLogin();
-  })
-  .catch(err => {
-    console.error(err);
-    alert("Registration failed");
-  });
-}
+        document.getElementById("nameInput").style.display = "none";
 
-// LOGIN
-function login() {
+        document.getElementById("mainBtn").innerText = "Login";
 
-  const username = document.getElementById("loginUsername").value;
-  const password = document.getElementById("loginPassword").value;
+        document.getElementById("mainBtn").onclick = login;
 
-  fetch(API + "/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      username,
-      password
-    })
-  })
-  .then(res => res.json())
-  .then(data => {
-
-    if (data.token) {
-      localStorage.setItem("token", data.token);
-      TOKEN = data.token;
-      openDashboard();
-    } else {
-      alert(data.msg || "Login failed");
+        document.getElementById("switchText").innerHTML =
+            `Don't have account?
+             <span class="switch" onclick="switchAuth()">
+                Register
+             </span>`;
     }
-  })
-  .catch(err => {
-    console.error(err);
-    alert("Login error");
-  });
 }
 
-// LOAD USERS
-function loadUsers() {
+/* REGISTER */
 
-  fetch(API + "/users", {
-    headers: {
-      "Authorization": "Bearer " + TOKEN
-    }
-  })
-  .then(res => res.json())
-  .then(data => {
+function register(){
 
-    let rows = "";
+    fetch(API + "/register", {
 
-    data.forEach(user => {
+        method:"POST",
 
-      rows += `
-        <tr>
-          <td>${user.name}</td>
-          <td>${user.email}</td>
-          <td>
-            <button class="delete-btn" onclick="deleteUser(${user.id})">
-              Delete
-            </button>
+        headers:{
+            "Content-Type":"application/json"
+        },
 
-            <button class="edit-btn" onclick="editUser(${user.id}, '${user.name}', '${user.email}')">
-              Edit
-            </button>
-          </td>
-        </tr>
-      `;
+        body:JSON.stringify({
+
+            name:document.getElementById("nameInput").value,
+
+            email:document.getElementById("emailInput").value,
+
+            password:document.getElementById("passwordInput").value
+        })
+
+    })
+
+    .then(r=>r.json())
+
+    .then(data=>{
+
+        if(data.message){
+
+            alert("Registration successful");
+
+            switchAuth();
+
+        }else{
+
+            alert(data.error);
+        }
     });
-
-    document.getElementById("userList").innerHTML = rows;
-  });
 }
 
-// ADD USER
-function addUser() {
+/* LOGIN */
 
-  const name = document.getElementById("name").value;
-  const email = document.getElementById("email").value;
+function login(){
 
-  if (!name || !email) {
-    alert("Enter all fields");
-    return;
-  }
+    fetch(API + "/login", {
 
-  fetch(API + "/users", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + TOKEN
-    },
-    body: JSON.stringify({
-      name,
-      email
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+
+            email:document.getElementById("emailInput").value,
+
+            password:document.getElementById("passwordInput").value
+        })
+
     })
-  })
-  .then(res => res.json())
-  .then(data => {
 
-    if (data.error) {
-      alert(data.error);
-      return;
+    .then(r=>r.json())
+
+    .then(data=>{
+
+        if(data.token){
+
+            localStorage.setItem("token", data.token);
+
+            localStorage.setItem("picture", data.picture || "");
+
+            location.reload();
+
+        }else{
+
+            alert(data.error);
+        }
+    });
+}
+
+/* GOOGLE LOGIN */
+
+function googleLogin(){
+
+    window.location.href =
+        API + "/google_login";
+}
+
+/* DASHBOARD */
+
+function showDashboard(){
+
+    document.getElementById("authPage").style.display = "none";
+
+    document.getElementById("dashboard").style.display = "flex";
+
+    const token = localStorage.getItem("token");
+
+    const payload =
+        JSON.parse(atob(token.split('.')[1]));
+
+    document.getElementById("topEmail").innerText =
+        payload.sub;
+
+    document.getElementById("profileEmail").innerText =
+        payload.sub;
+
+    document.getElementById("profileName").innerText =
+        payload.sub;
+
+    const pic = localStorage.getItem("picture");
+
+    if(pic){
+
+        document.getElementById("topProfilePic").src = pic;
+
+        document.getElementById("profilePic").src = pic;
     }
-
-    document.getElementById("name").value = "";
-    document.getElementById("email").value = "";
 
     loadUsers();
-  });
 }
 
-// DELETE USER
-function deleteUser(id) {
+/* LOAD USERS */
 
-  fetch(API + "/users/" + id, {
-    method: "DELETE",
-    headers: {
-      "Authorization": "Bearer " + TOKEN
-    }
-  })
-  .then(() => loadUsers());
-}
+function loadUsers(){
 
-// EDIT USER
-function editUser(id, oldName, oldEmail) {
+    fetch(API + "/users", {
 
-  const name = prompt("Enter new name", oldName);
-  const email = prompt("Enter new email", oldEmail);
+        headers:{
+            "Authorization":
+                "Bearer " + localStorage.getItem("token")
+        }
 
-  if (!name || !email) return;
-
-  fetch(API + "/users/" + id, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + TOKEN
-    },
-    body: JSON.stringify({
-      name,
-      email
     })
-  })
-  .then(() => loadUsers());
+
+    .then(r=>r.json())
+
+    .then(data=>{
+
+        let rows = "";
+
+        data.forEach(user=>{
+
+            rows += `
+            <tr>
+
+                <td>${user.name}</td>
+
+                <td>${user.email}</td>
+
+                <td>
+
+                    <button class="edit-btn"
+                        onclick="editUser(${user.id},
+                        '${user.name}',
+                        '${user.email}')">
+
+                        Edit
+
+                    </button>
+
+                    <button class="delete-btn"
+                        onclick="deleteUser(${user.id})">
+
+                        Delete
+
+                    </button>
+
+                </td>
+
+            </tr>`;
+        });
+
+        document.getElementById("userTable").innerHTML =
+            rows;
+    });
 }
 
-// USERS PAGE
-function showUsers() {
-  document.getElementById("usersSection").classList.remove("hidden");
-  document.getElementById("profileSection").classList.add("hidden");
+/* ADD USER */
+
+function addUser(){
+
+    fetch(API + "/users", {
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json",
+            "Authorization":
+                "Bearer " + localStorage.getItem("token")
+        },
+
+        body:JSON.stringify({
+
+            name:document.getElementById("userName").value,
+
+            email:document.getElementById("userEmail").value
+        })
+    })
+
+    .then(r=>r.json())
+
+    .then(data=>{
+
+        alert(data.message || data.error);
+
+        loadUsers();
+    });
 }
 
-// PROFILE PAGE
-function showProfile() {
-  document.getElementById("profileSection").classList.remove("hidden");
-  document.getElementById("usersSection").classList.add("hidden");
+/* DELETE */
+
+function deleteUser(id){
+
+    fetch(API + "/users/" + id, {
+
+        method:"DELETE",
+
+        headers:{
+            "Authorization":
+                "Bearer " + localStorage.getItem("token")
+        }
+
+    })
+
+    .then(()=>loadUsers());
 }
 
-// LOGOUT
-function logout() {
-  localStorage.removeItem("token");
-  TOKEN = null;
-  location.reload();
+/* EDIT */
+
+function editUser(id,name,email){
+
+    const newName =
+        prompt("Enter new name",name);
+
+    const newEmail =
+        prompt("Enter new email",email);
+
+    if(!newName || !newEmail) return;
+
+    fetch(API + "/users/" + id, {
+
+        method:"PUT",
+
+        headers:{
+            "Content-Type":"application/json",
+            "Authorization":
+                "Bearer " + localStorage.getItem("token")
+        },
+
+        body:JSON.stringify({
+            name:newName,
+            email:newEmail
+        })
+    })
+
+    .then(()=>loadUsers());
+}
+
+/* NAVIGATION */
+
+function showUsers(){
+
+    document.getElementById("usersPage").style.display =
+        "block";
+
+    document.getElementById("profilePage").style.display =
+        "none";
+}
+
+function showProfile(){
+
+    document.getElementById("usersPage").style.display =
+        "none";
+
+    document.getElementById("profilePage").style.display =
+        "block";
+}
+
+/* LOGOUT */
+
+function logout(){
+
+    localStorage.clear();
+
+    window.location.href =
+        "https://accounts.google.com/Logout";
 }
 
 </script>
