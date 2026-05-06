@@ -187,7 +187,7 @@ def google_login():
 
     token = create_access_token(identity=email)
 
-    return redirect(f"/?token={token}")
+    return redirect(f"https://api-project-e4fn.onrender.com/?token={token}")
 
 # ---------------- USERS ----------------
 
