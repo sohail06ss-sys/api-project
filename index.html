@@ -23,8 +23,6 @@ body{
     display:none !important;
 }
 
-/* AUTH */
-
 .auth-page{
     width:100%;
     height:100vh;
@@ -42,24 +40,12 @@ body{
     box-shadow:0 20px 40px rgba(0,0,0,0.2);
 }
 
-.auth-card h1{
-    text-align:center;
-    margin-bottom:10px;
-}
-
-.auth-card p{
-    text-align:center;
-    color:gray;
-    margin-bottom:25px;
-}
-
 .auth-card input{
     width:100%;
     padding:14px;
     margin-bottom:15px;
     border:1px solid #ddd;
     border-radius:10px;
-    font-size:15px;
 }
 
 .btn{
@@ -68,9 +54,8 @@ body{
     border:none;
     border-radius:10px;
     cursor:pointer;
-    font-size:15px;
-    margin-bottom:15px;
     color:white;
+    margin-bottom:15px;
 }
 
 .blue{
@@ -80,18 +65,6 @@ body{
 .red{
     background:#ea4335;
 }
-
-.switch{
-    text-align:center;
-}
-
-.switch span{
-    color:#2563eb;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-/* DASHBOARD */
 
 .dashboard{
     display:none;
@@ -110,7 +83,7 @@ body{
 }
 
 .logo{
-    font-size:32px;
+    font-size:30px;
     font-weight:bold;
     margin-bottom:40px;
 }
@@ -125,7 +98,6 @@ body{
     color:white;
     cursor:pointer;
     text-align:left;
-    font-size:15px;
 }
 
 .main{
@@ -138,7 +110,6 @@ body{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    box-shadow:0 2px 10px rgba(0,0,0,0.05);
 }
 
 .profile-top{
@@ -151,15 +122,14 @@ body{
     width:45px;
     height:45px;
     border-radius:50%;
-    object-fit:cover;
 }
 
 .logout-btn{
-    padding:10px 16px;
-    border:none;
-    border-radius:8px;
     background:#ef4444;
     color:white;
+    border:none;
+    padding:10px 15px;
+    border-radius:8px;
     cursor:pointer;
 }
 
@@ -171,11 +141,6 @@ body{
     background:white;
     border-radius:20px;
     padding:25px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.05);
-}
-
-.card h2{
-    margin-bottom:20px;
 }
 
 .form-row{
@@ -184,7 +149,8 @@ body{
     margin-bottom:20px;
 }
 
-.form-row input{
+.form-row input,
+.form-row select{
     flex:1;
     padding:12px;
     border:1px solid #ddd;
@@ -226,7 +192,6 @@ td{
     width:40px;
     height:40px;
     border-radius:50%;
-    object-fit:cover;
 }
 
 .edit-btn{
@@ -260,34 +225,16 @@ td{
     width:120px;
     height:120px;
     border-radius:50%;
-    object-fit:cover;
     margin-bottom:20px;
 }
 
-.profile-card p{
-    margin-top:10px;
-    color:#444;
-}
-
-.mobile-box{
-    margin-top:25px;
-}
-
-.mobile-box input{
-    padding:12px;
-    width:260px;
-    border:1px solid #ddd;
-    border-radius:8px;
-}
-
-.mobile-btn{
-    padding:12px 18px;
-    border:none;
-    background:#10b981;
+.role-badge{
+    display:inline-block;
+    padding:8px 15px;
+    background:#2563eb;
     color:white;
-    border-radius:8px;
-    cursor:pointer;
-    margin-left:10px;
+    border-radius:20px;
+    margin-top:15px;
 }
 
 </style>
@@ -295,15 +242,13 @@ td{
 
 <body>
 
-<!-- AUTH -->
-
 <div class="auth-page" id="authPage">
 
 <div class="auth-card">
 
 <h1 id="authTitle">🚀 Login</h1>
 
-<p id="authSubtitle">Welcome back</p>
+<br>
 
 <input type="text"
 id="nameInput"
@@ -329,28 +274,20 @@ onclick="googleLogin()">
 Continue with Google
 </button>
 
-<div class="switch"
-id="switchText">
-
-Don't have account?
-
-<span onclick="toggleAuth()">
-Register
+<p style="text-align:center;">
+<span onclick="toggleAuth()"
+style="cursor:pointer;color:#2563eb;">
+Switch Login/Register
 </span>
+</p>
 
 </div>
 
 </div>
-
-</div>
-
-<!-- DASHBOARD -->
 
 <div class="dashboard" id="dashboard">
 
 <div class="layout">
-
-<!-- SIDEBAR -->
 
 <div class="sidebar">
 
@@ -369,8 +306,6 @@ onclick="showProfile()">
 </button>
 
 </div>
-
-<!-- MAIN -->
 
 <div class="main">
 
@@ -407,9 +342,10 @@ Logout
 
 <div class="card">
 
-<h2>Users</h2>
+<h2>Users Management</h2>
 
-<div class="form-row">
+<div class="form-row"
+id="addUserBox">
 
 <input type="text"
 id="userName"
@@ -418,6 +354,12 @@ placeholder="Name">
 <input type="email"
 id="userEmail"
 placeholder="Email">
+
+<select id="userRole">
+<option>User</option>
+<option>Manager</option>
+<option>Admin</option>
+</select>
 
 <button class="add-btn"
 onclick="addUser()">
@@ -433,6 +375,7 @@ Add User
 <tr>
 <th>User</th>
 <th>Email</th>
+<th>Role</th>
 <th>Actions</th>
 </tr>
 
@@ -467,25 +410,13 @@ User
 
 <p>
 <strong>Mobile:</strong>
-<span id="profileMobile">
-Not Added
-</span>
+<span id="profileMobile"></span>
 </p>
 
-<div class="mobile-box">
-
-<input
-type="text"
-id="mobileInput"
-placeholder="Enter mobile number"
->
-
-<button
-class="mobile-btn"
-onclick="saveMobile()"
->
-Save Mobile
-</button>
+<div class="role-badge"
+id="profileRole">
+User
+</div>
 
 </div>
 
@@ -505,6 +436,7 @@ const API =
 "https://api-project-e4fn.onrender.com";
 
 let isRegister = false;
+let CURRENT_ROLE = "User";
 
 const params =
 new URLSearchParams(window.location.search);
@@ -540,36 +472,30 @@ function toggleAuth(){
     if(isRegister){
 
         document.getElementById("authTitle")
-            .innerText = "📝 Register";
-
-        document.getElementById("authSubtitle")
-            .innerText = "Create account";
+        .innerText = "📝 Register";
 
         document.getElementById("nameInput")
-            .classList.remove("hidden");
+        .classList.remove("hidden");
 
         document.getElementById("mainBtn")
-            .innerText = "Register";
+        .innerText = "Register";
 
         document.getElementById("mainBtn")
-            .onclick = register;
+        .onclick = register;
 
     }else{
 
         document.getElementById("authTitle")
-            .innerText = "🚀 Login";
-
-        document.getElementById("authSubtitle")
-            .innerText = "Welcome back";
+        .innerText = "🚀 Login";
 
         document.getElementById("nameInput")
-            .classList.add("hidden");
+        .classList.add("hidden");
 
         document.getElementById("mainBtn")
-            .innerText = "Login";
+        .innerText = "Login";
 
         document.getElementById("mainBtn")
-            .onclick = login;
+        .onclick = login;
     }
 }
 
@@ -668,10 +594,10 @@ function googleLogin(){
 function showDashboard(){
 
     document.getElementById("authPage")
-        .style.display = "none";
+    .style.display = "none";
 
     document.getElementById("dashboard")
-        .style.display = "block";
+    .style.display = "block";
 
     fetch(API + "/me",{
 
@@ -686,35 +612,39 @@ function showDashboard(){
 
     .then(user=>{
 
+        CURRENT_ROLE = user.role;
+
         document.getElementById("topName")
-            .innerText =
-            user.name || "User";
+        .innerText = user.name;
 
         document.getElementById("topEmail")
-            .innerText =
-            user.email || "";
+        .innerText = user.email;
 
         document.getElementById("profileName")
-            .innerText =
-            user.name || "User";
+        .innerText = user.name;
 
         document.getElementById("profileEmail")
-            .innerText =
-            user.email || "";
+        .innerText = user.email;
 
-        if(user.mobile){
+        document.getElementById("profileMobile")
+        .innerText = user.mobile;
 
-            document.getElementById("profileMobile")
-                .innerText = user.mobile;
-        }
+        document.getElementById("profileRole")
+        .innerText = user.role;
 
         if(user.picture){
 
             document.getElementById("topPic")
-                .src = user.picture;
+            .src = user.picture;
 
             document.getElementById("profilePic")
-                .src = user.picture;
+            .src = user.picture;
+        }
+
+        if(CURRENT_ROLE === "User"){
+
+            document.getElementById("addUserBox")
+            .style.display = "none";
         }
 
         loadUsers();
@@ -737,6 +667,18 @@ function loadUsers(){
     .then(r=>r.json())
 
     .then(data=>{
+
+        if(data.error){
+
+            document.getElementById("usersPage")
+            .innerHTML =
+            `<div class="card">
+            <h2>Access Restricted</h2>
+            <p>You do not have permission.</p>
+            </div>`;
+
+            return;
+        }
 
         let rows = "";
 
@@ -762,25 +704,39 @@ function loadUsers(){
 
             <td>${user.email}</td>
 
+            <td>${user.role}</td>
+
             <td>
+            ${
+                CURRENT_ROLE !== "User"
+                ?
+                `
+                <button class="edit-btn"
+                onclick="editUser(
+                ${user.id},
+                '${user.name}',
+                '${user.email}',
+                '${user.role}'
+                )">
+                Edit
+                </button>
+                `
+                :
+                ''
+            }
 
-            <button class="edit-btn"
-            onclick="editUser(
-            ${user.id},
-            '${user.name}',
-            '${user.email}'
-            )">
-
-            Edit
-
-            </button>
-
-            <button class="delete-btn"
-            onclick="deleteUser(${user.id})">
-
-            Delete
-
-            </button>
+            ${
+                CURRENT_ROLE === "Admin"
+                ?
+                `
+                <button class="delete-btn"
+                onclick="deleteUser(${user.id})">
+                Delete
+                </button>
+                `
+                :
+                ''
+            }
 
             </td>
 
@@ -789,7 +745,7 @@ function loadUsers(){
         });
 
         document.getElementById("userTable")
-            .innerHTML = rows;
+        .innerHTML = rows;
     });
 }
 
@@ -813,7 +769,10 @@ function addUser(){
             document.getElementById("userName").value,
 
             email:
-            document.getElementById("userEmail").value
+            document.getElementById("userEmail").value,
+
+            role:
+            document.getElementById("userRole").value
         })
 
     })
@@ -843,18 +802,28 @@ function deleteUser(id){
 
     })
 
-    .then(()=>loadUsers());
+    .then(r=>r.json())
+
+    .then(data=>{
+
+        alert(data.message || data.error);
+
+        loadUsers();
+    });
 }
 
 /* EDIT */
 
-function editUser(id,name,email){
+function editUser(id,name,email,role){
 
     const newName =
     prompt("Enter name",name);
 
     const newEmail =
     prompt("Enter email",email);
+
+    const newRole =
+    prompt("Enter role (Admin/Manager/User)",role);
 
     if(!newName || !newEmail) return;
 
@@ -871,33 +840,8 @@ function editUser(id,name,email){
         body:JSON.stringify({
 
             name:newName,
-            email:newEmail
-        })
-
-    })
-
-    .then(()=>loadUsers());
-}
-
-/* SAVE MOBILE */
-
-function saveMobile(){
-
-    const mobile =
-    document.getElementById("mobileInput").value;
-
-    fetch(API + "/update_mobile", {
-
-        method:"POST",
-
-        headers:{
-            "Content-Type":"application/json",
-            "Authorization":
-            "Bearer " + TOKEN
-        },
-
-        body:JSON.stringify({
-            mobile:mobile
+            email:newEmail,
+            role:newRole
         })
 
     })
@@ -906,13 +850,9 @@ function saveMobile(){
 
     .then(data=>{
 
-        alert(data.message);
+        alert(data.message || data.error);
 
-        document.getElementById("profileMobile")
-            .innerText = mobile;
-
-        document.getElementById("mobileInput")
-            .value = "";
+        loadUsers();
     });
 }
 
@@ -921,26 +861,26 @@ function saveMobile(){
 function showUsers(){
 
     document.getElementById("usersPage")
-        .style.display = "block";
+    .style.display = "block";
 
     document.getElementById("profilePage")
-        .style.display = "none";
+    .style.display = "none";
 }
 
 function showProfile(){
 
     document.getElementById("usersPage")
-        .style.display = "none";
+    .style.display = "none";
 
     document.getElementById("profilePage")
-        .style.display = "block";
+    .style.display = "block";
 }
 
 /* LOGOUT */
 
 function logout(){
 
-    localStorage.removeItem("token");
+    localStorage.clear();
 
     window.location.href = "/";
 }

@@ -60,14 +60,48 @@ def init_db():
         email TEXT UNIQUE,
         password TEXT,
         picture TEXT,
-        mobile TEXT
+        mobile TEXT,
+        role TEXT DEFAULT 'User'
     )
     """)
 
     conn.commit()
+
+    try:
+        cursor.execute(
+            "ALTER TABLE users ADD COLUMN role TEXT DEFAULT 'User'"
+        )
+        conn.commit()
+    except:
+        pass
+
     conn.close()
 
 init_db()
+
+# ---------------- HELPERS ----------------
+
+def get_current_user():
+
+    current_email = get_jwt_identity()
+
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT *
+        FROM users
+        WHERE email=?
+        """,
+        (current_email,)
+    )
+
+    user = cursor.fetchone()
+
+    conn.close()
+
+    return user
 
 # ---------------- FRONTEND ----------------
 
@@ -103,15 +137,16 @@ def register():
         cursor.execute(
             """
             INSERT INTO users
-            (name,email,password,picture,mobile)
-            VALUES(?,?,?,?,?)
+            (name,email,password,picture,mobile,role)
+            VALUES(?,?,?,?,?,?)
             """,
             (
                 name,
                 email,
                 hashed_password,
                 "",
-                mobile
+                mobile,
+                "User"
             )
         )
 
@@ -158,7 +193,6 @@ def login():
             "error": "User not found"
         }), 401
 
-    # GOOGLE LOGIN ACCOUNT
     if user[3] is None:
 
         return jsonify({
@@ -176,10 +210,7 @@ def login():
     )
 
     return jsonify({
-        "token": token,
-        "name": user[1],
-        "picture": user[4],
-        "mobile": user[5]
+        "token": token
     })
 
 # ---------------- GOOGLE LOGIN ----------------
@@ -223,15 +254,16 @@ def google_login():
             cursor.execute(
                 """
                 INSERT INTO users
-                (name,email,password,picture,mobile)
-                VALUES(?,?,?,?,?)
+                (name,email,password,picture,mobile,role)
+                VALUES(?,?,?,?,?,?)
                 """,
                 (
                     name,
                     email,
                     None,
                     picture,
-                    ""
+                    "",
+                    "User"
                 )
             )
 
@@ -280,7 +312,8 @@ def me():
             name,
             email,
             picture,
-            mobile
+            mobile,
+            role
         FROM users
         WHERE email=?
         """,
@@ -294,17 +327,15 @@ def me():
     if not user:
 
         return jsonify({
-            "name": "User",
-            "email": "",
-            "picture": "",
-            "mobile": ""
+            "name": "User"
         })
 
     return jsonify({
         "name": user[0],
         "email": user[1],
         "picture": user[2] if user[2] else "",
-        "mobile": user[3] if user[3] else "Not Added"
+        "mobile": user[3] if user[3] else "Not Added",
+        "role": user[4] if user[4] else "User"
     })
 
 # ---------------- USERS ----------------
@@ -313,12 +344,20 @@ def me():
 @jwt_required()
 def get_users():
 
+    current_user = get_current_user()
+
+    if current_user[6] == "User":
+
+        return jsonify({
+            "error": "Access denied"
+        }), 403
+
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
 
     cursor.execute(
         """
-        SELECT id,name,email,picture,mobile
+        SELECT id,name,email,picture,mobile,role
         FROM users
         """
     )
@@ -334,7 +373,8 @@ def get_users():
             "name": r[1],
             "email": r[2],
             "picture": r[3],
-            "mobile": r[4]
+            "mobile": r[4],
+            "role": r[5]
         }
 
         for r in rows
@@ -346,6 +386,14 @@ def get_users():
 @jwt_required()
 def add_user():
 
+    current_user = get_current_user()
+
+    if current_user[6] not in ["Admin", "Manager"]:
+
+        return jsonify({
+            "error": "Access denied"
+        }), 403
+
     data = request.get_json()
 
     conn = sqlite3.connect("database.db")
@@ -356,15 +404,16 @@ def add_user():
         cursor.execute(
             """
             INSERT INTO users
-            (name,email,password,picture,mobile)
-            VALUES(?,?,?,?,?)
+            (name,email,password,picture,mobile,role)
+            VALUES(?,?,?,?,?,?)
             """,
             (
                 data['name'],
                 data['email'],
                 None,
                 "",
-                data.get("mobile", "")
+                data.get("mobile", ""),
+                data.get("role", "User")
             )
         )
 
@@ -389,6 +438,14 @@ def add_user():
 @jwt_required()
 def delete_user(id):
 
+    current_user = get_current_user()
+
+    if current_user[6] != "Admin":
+
+        return jsonify({
+            "error": "Only Admin can delete users"
+        }), 403
+
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
 
@@ -410,6 +467,14 @@ def delete_user(id):
 @jwt_required()
 def update_user(id):
 
+    current_user = get_current_user()
+
+    if current_user[6] not in ["Admin", "Manager"]:
+
+        return jsonify({
+            "error": "Access denied"
+        }), 403
+
     data = request.get_json()
 
     conn = sqlite3.connect("database.db")
@@ -418,13 +483,14 @@ def update_user(id):
     cursor.execute(
         """
         UPDATE users
-        SET name=?, email=?, mobile=?
+        SET name=?, email=?, mobile=?, role=?
         WHERE id=?
         """,
         (
             data['name'],
             data['email'],
             data.get("mobile", ""),
+            data.get("role", "User"),
             id
         )
     )
