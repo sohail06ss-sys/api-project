@@ -6,7 +6,8 @@ import os
 from flask_jwt_extended import (
     JWTManager,
     create_access_token,
-    jwt_required
+    jwt_required,
+    get_jwt_identity
 )
 
 from werkzeug.security import (
@@ -96,15 +97,15 @@ def register():
     try:
 
         cursor.execute(
-            "INSERT INTO users(name,email,password) VALUES(?,?,?)",
-            (name, email, hashed_password)
+            "INSERT INTO users(name,email,password,picture) VALUES(?,?,?,?)",
+            (name, email, hashed_password, "")
         )
 
         conn.commit()
 
         return jsonify({"message": "Registration successful"})
 
-    except:
+    except sqlite3.IntegrityError:
         return jsonify({"error": "User already exists"}), 400
 
     finally:
@@ -135,10 +136,22 @@ def login():
     if not user:
         return jsonify({"error": "User not found"}), 401
 
+    # GOOGLE ACCOUNT LOGIN
+    if user[3] is None:
+        return jsonify({
+            "error": "Use Google Login for this account"
+        }), 401
+
     if not check_password_hash(user[3], password):
         return jsonify({"error": "Wrong password"}), 401
 
-    token = create_access_token(identity=email)
+    token = create_access_token(
+        identity={
+            "email": user[2],
+            "name": user[1],
+            "picture": user[4] if user[4] else ""
+        }
+    )
 
     return jsonify({
         "token": token,
@@ -151,43 +164,72 @@ def login():
 @app.route('/google_login')
 def google_login():
 
-    if not google.authorized:
-        return redirect(url_for("google.login"))
+    try:
 
-    resp = google.get(
-        "https://www.googleapis.com/oauth2/v2/userinfo"
-    )
+        if not google.authorized:
+            return redirect(url_for("google.login"))
 
-    user_info = resp.json()
-
-    name = user_info.get("name")
-    email = user_info.get("email")
-    picture = user_info.get("picture")
-
-    conn = sqlite3.connect("database.db")
-    cursor = conn.cursor()
-
-    cursor.execute(
-        "SELECT * FROM users WHERE email=?",
-        (email,)
-    )
-
-    existing = cursor.fetchone()
-
-    if not existing:
-
-        cursor.execute(
-            "INSERT INTO users(name,email,picture) VALUES(?,?,?)",
-            (name, email, picture)
+        resp = google.get(
+            "https://www.googleapis.com/oauth2/v2/userinfo"
         )
 
-        conn.commit()
+        if not resp.ok:
+            return "Google API Error"
 
-    conn.close()
+        user_info = resp.json()
 
-    token = create_access_token(identity=email)
+        name = user_info.get("name")
+        email = user_info.get("email")
+        picture = user_info.get("picture")
 
-    return redirect(f"https://api-project-e4fn.onrender.com/?token={token}")
+        conn = sqlite3.connect("database.db")
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "SELECT * FROM users WHERE email=?",
+            (email,)
+        )
+
+        existing = cursor.fetchone()
+
+        if not existing:
+
+            cursor.execute(
+                """
+                INSERT INTO users(name,email,password,picture)
+                VALUES(?,?,?,?)
+                """,
+                (name, email, None, picture)
+            )
+
+            conn.commit()
+
+        conn.close()
+
+        token = create_access_token(
+            identity={
+                "email": email,
+                "name": name,
+                "picture": picture
+            }
+        )
+
+        return redirect(
+            f"https://api-project-e4fn.onrender.com/?token={token}"
+        )
+
+    except Exception as e:
+        return f"Google Login Error: {str(e)}"
+
+# ---------------- CURRENT USER ----------------
+
+@app.route('/me')
+@jwt_required()
+def me():
+
+    current_user = get_jwt_identity()
+
+    return jsonify(current_user)
 
 # ---------------- USERS ----------------
 
@@ -230,15 +272,23 @@ def add_user():
     try:
 
         cursor.execute(
-            "INSERT INTO users(name,email) VALUES(?,?)",
-            (data['name'], data['email'])
+            """
+            INSERT INTO users(name,email,password,picture)
+            VALUES(?,?,?,?)
+            """,
+            (
+                data['name'],
+                data['email'],
+                None,
+                ""
+            )
         )
 
         conn.commit()
 
         return jsonify({"message": "User added"})
 
-    except:
+    except sqlite3.IntegrityError:
         return jsonify({"error": "User exists"}), 400
 
     finally:
@@ -275,7 +325,11 @@ def update_user(id):
     cursor = conn.cursor()
 
     cursor.execute(
-        "UPDATE users SET name=?, email=? WHERE id=?",
+        """
+        UPDATE users
+        SET name=?, email=?
+        WHERE id=?
+        """,
         (data['name'], data['email'], id)
     )
 

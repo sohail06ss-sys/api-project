@@ -756,8 +756,12 @@ function showProfile(){
 
 /* LOGOUT */
 
-function logout(){
+function logout() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
 
+    window.location.href = "/";
+}
     localStorage.clear();
 
     window.location.href =
