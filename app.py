@@ -26,8 +26,12 @@ jwt = JWTManager(app)
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET")
 
-if not GOOGLE_CLIENT_ID or not GOOGLE_CLIENT_SECRET:
-    raise Exception("❌ Google credentials missing")
+# ✅ LOCAL TESTING FALLBACK
+if not GOOGLE_CLIENT_ID:
+    GOOGLE_CLIENT_ID = "test"
+
+if not GOOGLE_CLIENT_SECRET:
+    GOOGLE_CLIENT_SECRET = "test"
 
 # 🔐 GOOGLE SETUP
 google_bp = make_google_blueprint(
