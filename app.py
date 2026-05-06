@@ -56,64 +56,16 @@ def init_db():
         )
     """)
 
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS auth (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT,
-            password TEXT
-        )
-    """)
-
     conn.commit()
     conn.close()
 
+# 🔥 ALWAYS RUN ON START
 init_db()
 
 # ---------- FRONTEND ----------
 @app.route('/')
 def home():
     return send_file("index.html")
-
-# ---------- REGISTER ----------
-@app.route('/register', methods=['POST'])
-def register():
-    data = request.get_json()
-
-    conn = sqlite3.connect("database.db")
-    cursor = conn.cursor()
-
-    cursor.execute(
-        "INSERT INTO auth (username, password) VALUES (?, ?)",
-        (data['username'], data['password'])
-    )
-
-    conn.commit()
-    conn.close()
-
-    return jsonify({"message": "Registered successfully"})
-
-# ---------- LOGIN ----------
-@app.route('/login', methods=['POST'])
-def login():
-    data = request.get_json()
-
-    conn = sqlite3.connect("database.db")
-    cursor = conn.cursor()
-
-    cursor.execute(
-        "SELECT * FROM auth WHERE username=? AND password=?",
-        (data['username'], data['password'])
-    )
-
-    user = cursor.fetchone()
-    conn.close()
-
-    if user:
-        token = create_access_token(identity=data['username'])
-        return jsonify({"token": token})
-
-    return jsonify({"msg": "Invalid login"}), 401
-
 
 # ---------- GOOGLE LOGIN ----------
 @app.route("/google_login")
@@ -160,7 +112,6 @@ def google_login():
         import traceback
         return f"ERROR: {str(e)}\n{traceback.format_exc()}"
 
-
 # ---------- USERS ----------
 @app.route('/users', methods=['GET'])
 @jwt_required()
@@ -177,8 +128,7 @@ def get_users():
         for r in rows
     ])
 
-
-# ✅ FIXED ADD USER (IMPORTANT)
+# ✅ FIXED ADD USER
 @app.route('/users', methods=['POST'])
 @jwt_required()
 def add_user():
@@ -205,7 +155,7 @@ def add_user():
     finally:
         conn.close()
 
-
+# DELETE
 @app.route('/users/<int:id>', methods=['DELETE'])
 @jwt_required()
 def delete_user(id):
@@ -218,7 +168,7 @@ def delete_user(id):
 
     return jsonify({"message": "User deleted"})
 
-
+# UPDATE
 @app.route('/users/<int:id>', methods=['PUT'])
 @jwt_required()
 def update_user(id):
@@ -236,3 +186,7 @@ def update_user(id):
     conn.close()
 
     return jsonify({"message": "User updated"})
+
+# ---------- RUN ----------
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
