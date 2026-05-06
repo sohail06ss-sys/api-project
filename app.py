@@ -185,75 +185,47 @@ def login():
 
 # ---------------- GOOGLE LOGIN ----------------
 
-@app.route('/google_login')
-def google_login():
+@app.route('/me')
+@jwt_required()
+def me():
 
-    try:
+    current_email = get_jwt_identity()
 
-        if not google.authorized:
-            return redirect(url_for("google.login"))
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
 
-        resp = google.get(
-            "https://www.googleapis.com/oauth2/v2/userinfo"
-        )
+    cursor.execute(
+        """
+        SELECT
+            name,
+            email,
+            picture,
+            mobile
+        FROM users
+        WHERE email=?
+        """,
+        (current_email,)
+    )
 
-        if not resp.ok:
-            return "Google API Error"
+    user = cursor.fetchone()
 
-        user_info = resp.json()
+    conn.close()
 
-        name = user_info.get("name")
-        email = user_info.get("email")
-        picture = user_info.get("picture")
+    if not user:
 
-        conn = sqlite3.connect("database.db")
-        cursor = conn.cursor()
+        return jsonify({
+            "name": "User",
+            "email": "",
+            "picture": "",
+            "mobile": ""
+        })
 
-        cursor.execute(
-            "SELECT * FROM users WHERE email=?",
-            (email,)
-        )
-
-        existing = cursor.fetchone()
-
-        if not existing:
-
-            cursor.execute(
-                """
-                INSERT INTO users
-                (name,email,password,picture,mobile)
-                VALUES(?,?,?,?,?)
-                """,
-                (
-                    name,
-                    email,
-                    None,
-                    picture,
-                    ""
-                )
-            )
-
-            conn.commit()
-
-        conn.close()
-
-        token = create_access_token(
-            identity={
-                "email": email,
-                "name": name,
-                "picture": picture,
-                "mobile": ""
-            }
-        )
-
-        return redirect(
-            f"https://api-project-e4fn.onrender.com/?token={token}"
-        )
-
-    except Exception as e:
-
-        return f"Google Login Error: {str(e)}"
-
+    return jsonify({
+        "name": user[0],
+        "email": user[1],
+        "picture": user[2] if user[2] else "",
+        "mobile": user[3] if user[3] else "Not Added"
+    })
 # ---------------- CURRENT USER ----------------
 
 @app.route('/me')
