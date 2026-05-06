@@ -262,7 +262,48 @@ def me():
 
     current_user = get_jwt_identity()
 
-    return jsonify(current_user)
+    # JWT stores dictionary
+    if isinstance(current_user, dict):
+
+        return jsonify({
+            "name": current_user.get("name", "User"),
+            "email": current_user.get("email", ""),
+            "picture": current_user.get("picture", ""),
+            "mobile": current_user.get("mobile", "")
+        })
+
+    # fallback if only email stored
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT name,email,picture,mobile
+        FROM users
+        WHERE email=?
+        """,
+        (current_user,)
+    )
+
+    user = cursor.fetchone()
+
+    conn.close()
+
+    if not user:
+
+        return jsonify({
+            "name": "User",
+            "email": "",
+            "picture": "",
+            "mobile": ""
+        })
+
+    return jsonify({
+        "name": user[0],
+        "email": user[1],
+        "picture": user[2] if user[2] else "",
+        "mobile": user[3] if user[3] else ""
+    })
 
 # ---------------- USERS ----------------
 
