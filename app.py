@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_file, redirect, url_for
+from flask import Flask, request, jsonify, redirect, url_for, render_template
 from flask_cors import CORS
 import sqlite3
 import os
@@ -92,7 +92,7 @@ init_db()
 
 @app.route('/')
 def home():
-    return send_file("index.html")
+    return render_template("index.html")
 
 # ---------------- REGISTER ----------------
 
