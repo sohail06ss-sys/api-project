@@ -1,653 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-<title>Premium Weather Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Premium SaaS Dashboard</title>
+
+<link rel="stylesheet" href="/static/css/style.css">
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
-}
-
-body{
-    background:#050816;
-    color:white;
-    min-height:100vh;
-    overflow-x:hidden;
-    background:
-        radial-gradient(circle at top left,#14213d,#050816 60%);
-}
-
-body::before{
-    content:'';
-    position:fixed;
-    width:100%;
-    height:100%;
-    background:
-        radial-gradient(circle at 20% 20%,rgba(0,255,255,0.08),transparent 20%),
-        radial-gradient(circle at 80% 30%,rgba(123,97,255,0.15),transparent 25%);
-    z-index:-1;
-}
-
-.container{
-    max-width:1400px;
-    margin:auto;
-    padding:30px;
-}
-
-.topbar{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:30px;
-    flex-wrap:wrap;
-    gap:20px;
-}
-
-.logo{
-    font-size:30px;
-    font-weight:700;
-    background:linear-gradient(to right,#00e5ff,#7b61ff);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-}
-
-.glass{
-    background:rgba(255,255,255,0.06);
-    border:1px solid rgba(255,255,255,0.1);
-    backdrop-filter:blur(20px);
-    border-radius:25px;
-    box-shadow:0 0 30px rgba(0,229,255,0.1);
-}
-
-.dashboard{
-    display:grid;
-    grid-template-columns:1.4fr 1fr;
-    gap:25px;
-}
-
-.left{
-    padding:30px;
-}
-
-.city{
-    font-size:42px;
-    font-weight:700;
-}
-
-.date{
-    color:#a5b4fc;
-    margin-top:8px;
-}
-
-.weather-main{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-top:30px;
-    flex-wrap:wrap;
-}
-
-.temp{
-    font-size:100px;
-    font-weight:700;
-    line-height:1;
-    background:linear-gradient(to bottom,#fff,#7dd3fc);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-}
-
-.weather-type{
-    color:#a5b4fc;
-    margin-top:10px;
-    font-size:20px;
-}
-
-.weather-icon{
-    font-size:90px;
-    animation:float 4s ease-in-out infinite;
-}
-
-@keyframes float{
-    0%,100%{transform:translateY(0);}
-    50%{transform:translateY(-10px);}
-}
-
-.stats{
-    margin-top:30px;
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:15px;
-}
-
-.stat{
-    padding:20px;
-    border-radius:20px;
-    background:rgba(255,255,255,0.05);
-}
-
-.stat-title{
-    color:#9ca3af;
-    margin-bottom:10px;
-}
-
-.stat-value{
-    font-size:24px;
-    font-weight:600;
-}
-
-.right{
-    padding:30px;
-}
-
-.section-title{
-    font-size:24px;
-    margin-bottom:20px;
-    font-weight:600;
-}
-
-.forecast{
-    display:flex;
-    flex-direction:column;
-    gap:15px;
-}
-
-.forecast-item{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:18px;
-    border-radius:18px;
-    background:rgba(255,255,255,0.05);
-}
-
-.auth-card{
-    margin-top:25px;
-    padding:25px;
-}
-
-.input-group{
-    margin-bottom:15px;
-}
-
-.input-group input{
-    width:100%;
-    padding:15px;
-    border:none;
-    outline:none;
-    border-radius:14px;
-    background:rgba(255,255,255,0.08);
-    color:white;
-    font-size:15px;
-}
-
-.btn{
-    width:100%;
-    padding:15px;
-    border:none;
-    border-radius:14px;
-    cursor:pointer;
-    font-size:15px;
-    font-weight:600;
-    margin-top:10px;
-    transition:0.3s;
-}
-
-.btn-primary{
-    background:linear-gradient(135deg,#00e5ff,#7b61ff);
-    color:white;
-}
-
-.btn-google{
-    background:white;
-    color:black;
-}
-
-.btn-danger{
-    background:linear-gradient(135deg,#ff4d6d,#ff758f);
-    color:white;
-}
-
-.btn:hover{
-    transform:translateY(-2px);
-}
-
-.user-box{
-    margin-top:25px;
-    padding:20px;
-    border-radius:20px;
-    background:rgba(255,255,255,0.05);
-    display:none;
-}
-
-.user-box img{
-    width:80px;
-    height:80px;
-    border-radius:50%;
-    margin-bottom:15px;
-    border:3px solid #00e5ff;
-}
-
-.search-box{
-    display:flex;
-    gap:10px;
-    margin-top:25px;
-}
-
-.search-box input{
-    flex:1;
-    padding:15px;
-    border:none;
-    outline:none;
-    border-radius:14px;
-    background:rgba(255,255,255,0.08);
-    color:white;
-}
-
-.search-box button{
-    padding:15px 25px;
-    border:none;
-    border-radius:14px;
-    cursor:pointer;
-    background:linear-gradient(135deg,#00e5ff,#7b61ff);
-    color:white;
-    font-weight:600;
-}
-
-footer{
-    margin-top:40px;
-    text-align:center;
-    color:#94a3b8;
-}
-
-@media(max-width:1100px){
-
-.dashboard{
-    grid-template-columns:1fr;
-}
-
-.stats{
-    grid-template-columns:repeat(2,1fr);
-}
-
-}
-
-@media(max-width:768px){
-
-.container{
-    padding:20px;
-}
-
-.temp{
-    font-size:70px;
-}
-
-.city{
-    font-size:32px;
-}
-
-.stats{
-    grid-template-columns:1fr;
-}
-
-}
-
-</style>
 </head>
+
 <body>
 
-<div class="container">
+<!-- AUTH SCREEN -->
 
-<div class="topbar">
-<div class="logo">⚡ Premium Weather SaaS</div>
-</div>
+<div id="authScreen" class="screen active">
 
-<div class="dashboard">
+    <div class="auth-container glass">
 
-<div class="glass left">
+        <h1>⚡ Premium SaaS</h1>
 
-<div class="city" id="cityName">Riyadh</div>
-<div class="date" id="dateText"></div>
+        <p class="subtitle">
+            Secure Flask + SQLite Authentication
+        </p>
 
-<div class="search-box">
-<input type="text" id="cityInput" placeholder="Search city">
-<button onclick="searchWeather()">Search</button>
-</div>
+        <input type="text" id="name" placeholder="Name">
 
-<div class="weather-main">
+        <input type="email" id="email" placeholder="Email">
 
-<div>
-<div class="temp" id="temp">38°</div>
-<div class="weather-type" id="weatherType">Sunny</div>
-</div>
+        <input type="password" id="password" placeholder="Password">
 
-<div class="weather-icon" id="weatherIcon">☀️</div>
+        <input type="text" id="mobile" placeholder="Mobile Number">
 
-</div>
+        <button onclick="registerUser()" class="btn primary">
+            Register
+        </button>
 
-<div class="stats">
+        <button onclick="loginUser()" class="btn primary">
+            Login
+        </button>
 
-<div class="stat">
-<div class="stat-title">Humidity</div>
-<div class="stat-value" id="humidity">48%</div>
-</div>
+        <button onclick="googleLogin()" class="btn google">
+            Continue with Google
+        </button>
 
-<div class="stat">
-<div class="stat-title">Wind</div>
-<div class="stat-value" id="wind">12 km/h</div>
-</div>
+        <button onclick="forgotPassword()" class="btn secondary">
+            Forgot Password
+        </button>
 
-<div class="stat">
-<div class="stat-title">Pressure</div>
-<div class="stat-value" id="pressure">1013</div>
-</div>
-
-<div class="stat">
-<div class="stat-title">Feels Like</div>
-<div class="stat-value" id="feels">40°</div>
-</div>
+    </div>
 
 </div>
 
+<!-- DASHBOARD -->
+
+<div id="dashboardScreen" class="screen hidden">
+
+    <div class="topbar glass">
+
+        <div class="logo">⚡ Dashboard</div>
+
+        <div class="topbar-right">
+
+            <div id="currentUser"></div>
+
+            <button onclick="logoutUser()" class="btn danger small">
+                Logout
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- DASHBOARD GRID -->
+
+    <div class="dashboard-grid">
+
+        <!-- WEATHER -->
+
+        <div class="glass weather-card">
+
+            <h2>Weather Dashboard</h2>
+
+            <div class="weather-main">
+
+                <div>
+
+                    <div id="temp" class="temp">38°</div>
+
+                    <div id="weatherType">
+                        Sunny
+                    </div>
+
+                </div>
+
+                <div class="weather-icon">
+                    ☀️
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- PROFILE -->
+
+        <div class="glass profile-card">
+
+            <h2>User Profile</h2>
+
+            <img id="profileImage"
+                 src="https://i.imgur.com/6VBx3io.png">
+
+            <h3 id="profileName">User</h3>
+
+            <p id="profileEmail"></p>
+
+            <p id="profileRole"></p>
+
+            <p id="profileMobile"></p>
+
+        </div>
+
+    </div>
+
+    <!-- ADMIN PANEL -->
+
+    <div id="adminPanel"
+         class="glass admin-panel hidden">
+
+        <div class="admin-header">
+
+            <h2>User Management</h2>
+
+        </div>
+
+        <!-- ADD USER -->
+
+        <div class="add-user-grid">
+
+            <input type="text"
+                   id="newUserName"
+                   placeholder="Name">
+
+            <input type="email"
+                   id="newUserEmail"
+                   placeholder="Email">
+
+            <input type="text"
+                   id="newUserMobile"
+                   placeholder="Mobile">
+
+            <button onclick="addUser()"
+                    class="btn primary">
+
+                Add User
+
+            </button>
+
+        </div>
+
+        <!-- USERS TABLE -->
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Mobile</th>
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="usersTable"></tbody>
+
+        </table>
+
+    </div>
+
 </div>
 
-<div class="glass right">
-
-<div class="section-title">5-Day Forecast</div>
-
-<div class="forecast">
-
-<div class="forecast-item">
-<div>☀️ Tuesday</div>
-<div>39° / 30°</div>
-</div>
-
-<div class="forecast-item">
-<div>🌤 Wednesday</div>
-<div>36° / 28°</div>
-</div>
-
-<div class="forecast-item">
-<div>🌧 Thursday</div>
-<div>31° / 24°</div>
-</div>
-
-<div class="forecast-item">
-<div>⛅ Friday</div>
-<div>33° / 25°</div>
-</div>
-
-<div class="forecast-item">
-<div>☀️ Saturday</div>
-<div>40° / 31°</div>
-</div>
-
-</div>
-
-<div class="auth-card">
-
-<div class="section-title">Authentication</div>
-
-<div class="input-group">
-<input type="text" id="name" placeholder="Name">
-</div>
-
-<div class="input-group">
-<input type="email" id="email" placeholder="Email">
-</div>
-
-<div class="input-group">
-<input type="password" id="password" placeholder="Password">
-</div>
-
-<div class="input-group">
-<input type="text" id="mobile" placeholder="Mobile">
-</div>
-
-<button class="btn btn-primary" onclick="registerUser()">
-Register
-</button>
-
-<button class="btn btn-primary" onclick="loginUser()">
-Login
-</button>
-
-<button class="btn btn-google" onclick="googleLogin()">
-Continue With Google
-</button>
-
-<button class="btn btn-danger" onclick="logoutUser()">
-Logout
-</button>
-
-<div class="user-box" id="userBox">
-
-<img id="userImage" src="https://i.imgur.com/6VBx3io.png">
-
-<h3 id="userName">User</h3>
-
-<p id="userEmail"></p>
-
-<p id="userRole"></p>
-
-<p id="userMobile"></p>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<footer>
-Built with Flask + SQLite + JWT + Google OAuth
-</footer>
-
-</div>
-
-<script>
-
-const API_BASE = "https://api-project-e4fn.onrender.com";
-
-const weatherData = {
-
-Riyadh:{
-temp:"38°",
-type:"Sunny",
-icon:"☀️",
-humidity:"48%",
-wind:"12 km/h",
-pressure:"1013",
-feels:"40°"
-},
-
-Dubai:{
-temp:"41°",
-type:"Hot & Clear",
-icon:"🌤️",
-humidity:"55%",
-wind:"18 km/h",
-pressure:"1010",
-feels:"44°"
-},
-
-London:{
-temp:"19°",
-type:"Rainy",
-icon:"🌧️",
-humidity:"81%",
-wind:"20 km/h",
-pressure:"1007",
-feels:"18°"
-}
-
-};
-
-function searchWeather(){
-
-const city = document.getElementById("cityInput").value.trim();
-
-if(!city)return;
-
-const data = weatherData[city] || weatherData["Riyadh"];
-
-document.getElementById("cityName").innerText = city;
-document.getElementById("temp").innerText = data.temp;
-document.getElementById("weatherType").innerText = data.type;
-document.getElementById("weatherIcon").innerText = data.icon;
-document.getElementById("humidity").innerText = data.humidity;
-document.getElementById("wind").innerText = data.wind;
-document.getElementById("pressure").innerText = data.pressure;
-document.getElementById("feels").innerText = data.feels;
-
-}
-
-async function registerUser(){
-
-const name = document.getElementById("name").value;
-const email = document.getElementById("email").value;
-const password = document.getElementById("password").value;
-const mobile = document.getElementById("mobile").value;
-
-const res = await fetch(`${API_BASE}/register`,{
-
-method:"POST",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({
-name,
-email,
-password,
-mobile
-})
-
-});
-
-const data = await res.json();
-
-alert(data.message || data.error);
-
-}
-
-async function loginUser(){
-
-const email = document.getElementById("email").value;
-const password = document.getElementById("password").value;
-
-const res = await fetch(`${API_BASE}/login`,{
-
-method:"POST",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({
-email,
-password
-})
-
-});
-
-const data = await res.json();
-
-if(data.token){
-
-localStorage.setItem("token",data.token);
-
-loadCurrentUser();
-
-alert("Login Successful ✅");
-
-}else{
-
-alert(data.error || "Login Failed");
-
-}
-
-}
-
-function googleLogin(){
-
-window.location.href = `${API_BASE}/google_login`;
-
-}
-
-function logoutUser(){
-
-localStorage.removeItem("token");
-
-document.getElementById("userBox").style.display = "none";
-
-alert("Logged Out");
-
-}
-
-async function loadCurrentUser(){
-
-const token = localStorage.getItem("token");
-
-if(!token)return;
-
-const res = await fetch(`${API_BASE}/me`,{
-
-headers:{
-Authorization:`Bearer ${token}`
-}
-
-});
-
-const data = await res.json();
-
-document.getElementById("userBox").style.display = "block";
-
-document.getElementById("userName").innerText = data.name;
-document.getElementById("userEmail").innerText = data.email;
-document.getElementById("userRole").innerText = "Role: " + data.role;
-document.getElementById("userMobile").innerText = "Mobile: " + data.mobile;
-
-if(data.picture){
-
-document.getElementById("userImage").src = data.picture;
-
-}
-
-}
-
-const params = new URLSearchParams(window.location.search);
-
-const token = params.get("token");
-
-if(token){
-
-localStorage.setItem("token",token);
-
-window.history.replaceState({},document.title,"/");
-
-}
-
-loadCurrentUser();
-
-document.getElementById("dateText").innerText =
-new Date().toLocaleDateString('en-US',{
-weekday:'long',
-month:'long',
-day:'numeric'
-});
-
-</script>
+<script src="/static/js/app.js"></script>
 
 </body>
 </html>
