@@ -385,7 +385,31 @@ def add_user():
 
     try:
 
-        role = "Admin" if data['email'] == ADMIN_EMAIL else "User"
+        # USER DETAILS
+
+        name = data.get("name")
+        email = data.get("email")
+        mobile = data.get("mobile", "")
+
+        # PASSWORD
+
+        password = data.get("password", "123456")
+
+        hashed_password = generate_password_hash(password)
+
+        # ROLE
+
+        role = data.get("role", "User")
+
+        # VALIDATION
+
+        if not name or not email:
+
+            return jsonify({
+                "error": "Missing required fields"
+            }), 400
+
+        # INSERT USER
 
         cursor.execute(
             """
@@ -394,11 +418,11 @@ def add_user():
             VALUES(?,?,?,?,?,?)
             """,
             (
-                data['name'],
-                data['email'],
-                None,
+                name,
+                email,
+                hashed_password,
                 "",
-                data.get("mobile", ""),
+                mobile,
                 role
             )
         )
@@ -406,16 +430,35 @@ def add_user():
         conn.commit()
 
         return jsonify({
-            "message": "User added"
+
+            "message":
+            "User added successfully",
+
+            "default_password":
+            password
+
         })
 
     except sqlite3.IntegrityError:
 
         return jsonify({
-            "error": "User already exists"
+
+            "error":
+            "User already exists"
+
         }), 400
 
+    except Exception as e:
+
+        return jsonify({
+
+            "error":
+            str(e)
+
+        }), 500
+
     finally:
+
         conn.close()
 
 # ---------------- DELETE USER ----------------
