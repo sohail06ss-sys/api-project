@@ -4,6 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>AI SaaS Dashboard</title>
 
 <style>
@@ -22,6 +23,8 @@ body{
 .hidden{
     display:none !important;
 }
+
+/* AUTH */
 
 .auth-page{
     width:100%;
@@ -65,6 +68,8 @@ body{
 .red{
     background:#ea4335;
 }
+
+/* DASHBOARD */
 
 .dashboard{
     display:none;
@@ -141,6 +146,7 @@ body{
     background:white;
     border-radius:20px;
     padding:25px;
+    margin-bottom:25px;
 }
 
 .form-row{
@@ -164,6 +170,42 @@ body{
     padding:12px 18px;
     border-radius:8px;
     cursor:pointer;
+}
+
+.weather-btn{
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:12px 18px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.weather-card{
+    margin-top:20px;
+    background:linear-gradient(135deg,#2563eb,#1e40af);
+    color:white;
+    padding:25px;
+    border-radius:20px;
+}
+
+.weather-temp{
+    font-size:50px;
+    font-weight:bold;
+    margin:15px 0;
+}
+
+.weather-details{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:15px;
+    margin-top:20px;
+}
+
+.weather-box{
+    background:rgba(255,255,255,0.15);
+    padding:15px;
+    border-radius:15px;
 }
 
 table{
@@ -242,6 +284,8 @@ td{
 
 <body>
 
+<!-- AUTH -->
+
 <div class="auth-page" id="authPage">
 
 <div class="auth-card">
@@ -285,9 +329,13 @@ Switch Login/Register
 
 </div>
 
+<!-- DASHBOARD -->
+
 <div class="dashboard" id="dashboard">
 
 <div class="layout">
+
+<!-- SIDEBAR -->
 
 <div class="sidebar">
 
@@ -307,6 +355,8 @@ onclick="showProfile()">
 
 </div>
 
+<!-- MAIN -->
+
 <div class="main">
 
 <div class="navbar">
@@ -320,6 +370,7 @@ src="https://cdn-icons-png.flaticon.com/512/149/149071.png">
 
 <div>
 <div id="topName"></div>
+
 <div id="topEmail"
 style="font-size:13px;color:gray;">
 </div>
@@ -335,6 +386,35 @@ Logout
 </div>
 
 <div class="content">
+
+<!-- WEATHER -->
+
+<div class="card">
+
+<h2>🌍 Global Weather Search</h2>
+
+<div class="form-row">
+
+<input
+type="text"
+id="cityInput"
+placeholder="Enter city name">
+
+<button
+class="weather-btn"
+onclick="getWeather()">
+
+Check Weather
+
+</button>
+
+</div>
+
+<div
+id="weatherResult">
+</div>
+
+</div>
 
 <!-- USERS -->
 
@@ -356,14 +436,18 @@ id="userEmail"
 placeholder="Email">
 
 <select id="userRole">
+
 <option>User</option>
 <option>Manager</option>
 <option>Admin</option>
+
 </select>
 
 <button class="add-btn"
 onclick="addUser()">
+
 Add User
+
 </button>
 
 </div>
@@ -415,7 +499,9 @@ User
 
 <div class="role-badge"
 id="profileRole">
+
 User
+
 </div>
 
 </div>
@@ -434,6 +520,9 @@ User
 
 const API =
 "https://api-project-e4fn.onrender.com";
+
+const WEATHER_API_KEY =
+"b9fcd128686e3483d4de612c2c0f0ff6";
 
 let isRegister = false;
 let CURRENT_ROLE = "User";
@@ -589,6 +678,104 @@ function googleLogin(){
     API + "/google_login";
 }
 
+/* WEATHER */
+
+async function getWeather(){
+
+    const city =
+    document.getElementById("cityInput").value;
+
+    if(!city){
+
+        alert("Enter city name");
+        return;
+    }
+
+    const url =
+    `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${WEATHER_API_KEY}&units=metric`;
+
+    try{
+
+        const response =
+        await fetch(url);
+
+        const data =
+        await response.json();
+
+        if(data.cod != 200){
+
+            document.getElementById("weatherResult")
+            .innerHTML =
+            `<p>City not found</p>`;
+
+            return;
+        }
+
+        document.getElementById("weatherResult")
+        .innerHTML =
+
+        `
+        <div class="weather-card">
+
+        <h2>
+        📍 ${data.name}, ${data.sys.country}
+        </h2>
+
+        <div class="weather-temp">
+        ${Math.round(data.main.temp)}°C
+        </div>
+
+        <h3>
+        ${data.weather[0].main}
+        </h3>
+
+        <div class="weather-details">
+
+        <div class="weather-box">
+        💧 Humidity
+        <br><br>
+        <strong>
+        ${data.main.humidity}%
+        </strong>
+        </div>
+
+        <div class="weather-box">
+        🌬 Wind Speed
+        <br><br>
+        <strong>
+        ${data.wind.speed} km/h
+        </strong>
+        </div>
+
+        <div class="weather-box">
+        🌡 Feels Like
+        <br><br>
+        <strong>
+        ${data.main.feels_like}°C
+        </strong>
+        </div>
+
+        <div class="weather-box">
+        ☁ Condition
+        <br><br>
+        <strong>
+        ${data.weather[0].description}
+        </strong>
+        </div>
+
+        </div>
+
+        </div>
+        `;
+
+    }catch(error){
+
+        console.log(error);
+
+        alert("Weather error");
+    }
+}
+
 /* DASHBOARD */
 
 function showDashboard(){
@@ -668,18 +855,6 @@ function loadUsers(){
 
     .then(data=>{
 
-        if(data.error){
-
-            document.getElementById("usersPage")
-            .innerHTML =
-            `<div class="card">
-            <h2>Access Restricted</h2>
-            <p>You do not have permission.</p>
-            </div>`;
-
-            return;
-        }
-
         let rows = "";
 
         data.forEach(user=>{
@@ -707,6 +882,7 @@ function loadUsers(){
             <td>${user.role}</td>
 
             <td>
+
             ${
                 CURRENT_ROLE !== "User"
                 ?
@@ -802,14 +978,7 @@ function deleteUser(id){
 
     })
 
-    .then(r=>r.json())
-
-    .then(data=>{
-
-        alert(data.message || data.error);
-
-        loadUsers();
-    });
+    .then(()=>loadUsers());
 }
 
 /* EDIT */
@@ -823,9 +992,7 @@ function editUser(id,name,email,role){
     prompt("Enter email",email);
 
     const newRole =
-    prompt("Enter role (Admin/Manager/User)",role);
-
-    if(!newName || !newEmail) return;
+    prompt("Enter role",role);
 
     fetch(API + "/users/" + id,{
 
@@ -846,14 +1013,7 @@ function editUser(id,name,email,role){
 
     })
 
-    .then(r=>r.json())
-
-    .then(data=>{
-
-        alert(data.message || data.error);
-
-        loadUsers();
-    });
+    .then(()=>loadUsers());
 }
 
 /* NAVIGATION */
