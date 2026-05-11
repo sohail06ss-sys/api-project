@@ -81,29 +81,52 @@
 
         <!-- WEATHER -->
 
-        <div class="glass weather-card">
+<div class="glass weather-card">
 
-            <h2>Weather Dashboard</h2>
+    <h2>Weather Dashboard</h2>
 
-            <div class="weather-main">
+    <div class="weather-search">
 
-                <div>
+        <input
+            type="text"
+            id="cityInput"
+            placeholder="Enter city name">
 
-                    <div id="temp" class="temp">38°</div>
+        <button
+            onclick="searchWeather()"
+            class="btn primary">
 
-                    <div id="weatherType">
-                        Sunny
-                    </div>
+            Search
 
-                </div>
+        </button>
 
-                <div class="weather-icon">
-                    ☀️
-                </div>
+    </div>
 
+    <div class="weather-main">
+
+        <div>
+
+            <div id="temp" class="temp">
+                --
+            </div>
+
+            <div id="weatherType">
+                Search weather
             </div>
 
         </div>
+
+        <div
+            class="weather-icon"
+            id="weatherIcon">
+
+            🌤️
+
+        </div>
+
+    </div>
+
+</div>
 
         <!-- PROFILE -->
 
@@ -137,30 +160,70 @@
 
         </div>
 
-        <!-- ADD USER -->
+       <!-- ADMIN ACTIONS -->
 
-        <div class="add-user-grid">
+<div class="admin-actions">
 
-            <input type="text"
-                   id="newUserName"
-                   placeholder="Name">
+    <button
+        onclick="loadUsers()"
+        class="btn primary small">
 
-            <input type="email"
-                   id="newUserEmail"
-                   placeholder="Email">
+        Load Users
 
-            <input type="text"
-                   id="newUserMobile"
-                   placeholder="Mobile">
+    </button>
 
-            <button onclick="addUser()"
-                    class="btn primary">
+</div>
 
-                Add User
+<!-- ADMIN ACTIONS -->
 
-            </button>
+<div class="admin-actions">
 
-        </div>
+    <button
+        onclick="loadUsers()"
+        class="btn primary small">
+
+        Load Users
+
+    </button>
+
+</div>
+
+<!-- ADD USER -->
+
+<div class="add-user-grid">
+
+    <input type="text"
+           id="newUserName"
+           placeholder="Name">
+
+    <input type="email"
+           id="newUserEmail"
+           placeholder="Email">
+
+    <input type="text"
+           id="newUserMobile"
+           placeholder="Mobile">
+
+    <select id="newUserRole">
+
+        <option value="User">
+            User
+        </option>
+
+        <option value="Admin">
+            Admin
+        </option>
+
+    </select>
+
+    <button onclick="addUser()"
+            class="btn primary">
+
+        Add User
+
+    </button>
+
+</div>
 
         <!-- USERS TABLE -->
 
@@ -175,6 +238,7 @@
                     <th>Email</th>
                     <th>Role</th>
                     <th>Mobile</th>
+                    <th>Role</th>
                     <th>Action</th>
 
                 </tr>
