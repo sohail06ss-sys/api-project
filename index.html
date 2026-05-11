@@ -1,735 +1,653 @@
-# Premium Redesigned `index.html`
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Neon Weather Dashboard</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>Premium Weather Dashboard</title>
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
-    }
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    :root {
-      --bg: #060816;
-      --card: rgba(255,255,255,0.08);
-      --border: rgba(255,255,255,0.12);
-      --text: #ffffff;
-      --muted: #a6accd;
-      --primary: #00e5ff;
-      --secondary: #7b61ff;
-      --danger: #ff4d6d;
-      --success: #00ffae;
-      --shadow: 0 0 25px rgba(0,229,255,0.25);
-    }
+<style>
 
-    body {
-      background: radial-gradient(circle at top left, #101b3a, #060816 60%);
-      min-height: 100vh;
-      color: var(--text);
-      overflow-x: hidden;
-    }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(circle at 20% 20%, rgba(0,229,255,0.08), transparent 20%),
-        radial-gradient(circle at 80% 30%, rgba(123,97,255,0.12), transparent 25%),
-        radial-gradient(circle at 50% 80%, rgba(0,255,174,0.08), transparent 20%);
-      z-index: -1;
-    }
+body{
+    background:#050816;
+    color:white;
+    min-height:100vh;
+    overflow-x:hidden;
+    background:
+        radial-gradient(circle at top left,#14213d,#050816 60%);
+}
 
-    .container {
-      width: 100%;
-      max-width: 1400px;
-      margin: auto;
-      padding: 30px;
-    }
+body::before{
+    content:'';
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:
+        radial-gradient(circle at 20% 20%,rgba(0,255,255,0.08),transparent 20%),
+        radial-gradient(circle at 80% 30%,rgba(123,97,255,0.15),transparent 25%);
+    z-index:-1;
+}
 
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 30px;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
+.container{
+    max-width:1400px;
+    margin:auto;
+    padding:30px;
+}
 
-    .logo {
-      font-size: 28px;
-      font-weight: 700;
-      background: linear-gradient(to right, var(--primary), var(--secondary));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+    flex-wrap:wrap;
+    gap:20px;
+}
 
-    .search-box {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      backdrop-filter: blur(15px);
-      border-radius: 18px;
-      padding: 10px 15px;
-      box-shadow: var(--shadow);
-    }
+.logo{
+    font-size:30px;
+    font-weight:700;
+    background:linear-gradient(to right,#00e5ff,#7b61ff);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
 
-    .search-box input {
-      background: transparent;
-      border: none;
-      outline: none;
-      color: white;
-      width: 240px;
-      font-size: 15px;
-    }
+.glass{
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.1);
+    backdrop-filter:blur(20px);
+    border-radius:25px;
+    box-shadow:0 0 30px rgba(0,229,255,0.1);
+}
 
-    .search-box button {
-      border: none;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: white;
-      padding: 10px 18px;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: 0.3s ease;
-      box-shadow: 0 0 20px rgba(0,229,255,0.4);
-    }
+.dashboard{
+    display:grid;
+    grid-template-columns:1.4fr 1fr;
+    gap:25px;
+}
 
-    .search-box button:hover {
-      transform: translateY(-2px) scale(1.03);
-      box-shadow: 0 0 30px rgba(0,229,255,0.7);
-    }
+.left{
+    padding:30px;
+}
 
-    .dashboard {
-      display: grid;
-      grid-template-columns: 1.3fr 1fr;
-      gap: 25px;
-    }
+.city{
+    font-size:42px;
+    font-weight:700;
+}
 
-    .glass-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      backdrop-filter: blur(18px);
-      border-radius: 28px;
-      padding: 25px;
-      box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
-    }
+.date{
+    color:#a5b4fc;
+    margin-top:8px;
+}
 
-    .glass-card::after {
-      content: "";
-      position: absolute;
-      width: 200px;
-      height: 200px;
-      background: radial-gradient(circle, rgba(0,229,255,0.18), transparent 70%);
-      top: -80px;
-      right: -80px;
-      pointer-events: none;
-    }
+.weather-main{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:30px;
+    flex-wrap:wrap;
+}
 
-    .weather-main {
-      display: flex;
-      flex-direction: column;
-      gap: 25px;
-    }
+.temp{
+    font-size:100px;
+    font-weight:700;
+    line-height:1;
+    background:linear-gradient(to bottom,#fff,#7dd3fc);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
 
-    .city {
-      font-size: 42px;
-      font-weight: 700;
-    }
+.weather-type{
+    color:#a5b4fc;
+    margin-top:10px;
+    font-size:20px;
+}
 
-    .date {
-      color: var(--muted);
-      margin-top: 6px;
-    }
+.weather-icon{
+    font-size:90px;
+    animation:float 4s ease-in-out infinite;
+}
 
-    .temperature {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
+@keyframes float{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-10px);}
+}
 
-    .temp {
-      font-size: 100px;
-      font-weight: 700;
-      line-height: 1;
-      background: linear-gradient(to bottom, white, #7dd3fc);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+.stats{
+    margin-top:30px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+}
 
-    .weather-type {
-      font-size: 20px;
-      color: var(--muted);
-      margin-top: 10px;
-    }
+.stat{
+    padding:20px;
+    border-radius:20px;
+    background:rgba(255,255,255,0.05);
+}
 
-    .weather-icon {
-      font-size: 90px;
-      animation: float 4s ease-in-out infinite;
-    }
+.stat-title{
+    color:#9ca3af;
+    margin-bottom:10px;
+}
 
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
-    }
+.stat-value{
+    font-size:24px;
+    font-weight:600;
+}
 
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
-    }
+.right{
+    padding:30px;
+}
 
-    .stat-box {
-      background: rgba(255,255,255,0.05);
-      border-radius: 18px;
-      padding: 18px;
-      border: 1px solid rgba(255,255,255,0.08);
-      transition: 0.3s ease;
-    }
+.section-title{
+    font-size:24px;
+    margin-bottom:20px;
+    font-weight:600;
+}
 
-    .stat-box:hover {
-      transform: translateY(-4px);
-      background: rgba(255,255,255,0.08);
-    }
+.forecast{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
 
-    .stat-title {
-      color: var(--muted);
-      font-size: 14px;
-      margin-bottom: 8px;
-    }
+.forecast-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px;
+    border-radius:18px;
+    background:rgba(255,255,255,0.05);
+}
 
-    .stat-value {
-      font-size: 24px;
-      font-weight: 600;
-    }
+.auth-card{
+    margin-top:25px;
+    padding:25px;
+}
 
-    .forecast-title {
-      margin-bottom: 20px;
-      font-size: 22px;
-      font-weight: 600;
-    }
+.input-group{
+    margin-bottom:15px;
+}
 
-    .forecast-list {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
+.input-group input{
+    width:100%;
+    padding:15px;
+    border:none;
+    outline:none;
+    border-radius:14px;
+    background:rgba(255,255,255,0.08);
+    color:white;
+    font-size:15px;
+}
 
-    .forecast-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 18px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      transition: 0.3s ease;
-    }
+.btn{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:14px;
+    cursor:pointer;
+    font-size:15px;
+    font-weight:600;
+    margin-top:10px;
+    transition:0.3s;
+}
 
-    .forecast-item:hover {
-      transform: scale(1.02);
-      background: rgba(255,255,255,0.08);
-    }
+.btn-primary{
+    background:linear-gradient(135deg,#00e5ff,#7b61ff);
+    color:white;
+}
 
-    .forecast-left {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
+.btn-google{
+    background:white;
+    color:black;
+}
 
-    .forecast-day {
-      font-weight: 600;
-    }
+.btn-danger{
+    background:linear-gradient(135deg,#ff4d6d,#ff758f);
+    color:white;
+}
 
-    .forecast-temp {
-      font-weight: 600;
-      color: var(--primary);
-    }
+.btn:hover{
+    transform:translateY(-2px);
+}
 
-    .bottom-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 25px;
-      margin-top: 25px;
-    }
+.user-box{
+    margin-top:25px;
+    padding:20px;
+    border-radius:20px;
+    background:rgba(255,255,255,0.05);
+    display:none;
+}
 
-    .hourly-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 15px;
-      margin-top: 20px;
-    }
+.user-box img{
+    width:80px;
+    height:80px;
+    border-radius:50%;
+    margin-bottom:15px;
+    border:3px solid #00e5ff;
+}
 
-    .hour-box {
-      background: rgba(255,255,255,0.05);
-      border-radius: 16px;
-      padding: 15px;
-      text-align: center;
-      border: 1px solid rgba(255,255,255,0.08);
-      transition: 0.3s ease;
-    }
+.search-box{
+    display:flex;
+    gap:10px;
+    margin-top:25px;
+}
 
-    .hour-box:hover {
-      transform: translateY(-5px);
-    }
+.search-box input{
+    flex:1;
+    padding:15px;
+    border:none;
+    outline:none;
+    border-radius:14px;
+    background:rgba(255,255,255,0.08);
+    color:white;
+}
 
-    .hour-time {
-      color: var(--muted);
-      margin-bottom: 10px;
-    }
+.search-box button{
+    padding:15px 25px;
+    border:none;
+    border-radius:14px;
+    cursor:pointer;
+    background:linear-gradient(135deg,#00e5ff,#7b61ff);
+    color:white;
+    font-weight:600;
+}
 
-    .hour-temp {
-      font-size: 20px;
-      font-weight: 600;
-      margin-top: 8px;
-    }
+footer{
+    margin-top:40px;
+    text-align:center;
+    color:#94a3b8;
+}
 
-    .auth-buttons {
-      display: flex;
-      gap: 15px;
-      margin-top: 20px;
-      flex-wrap: wrap;
-    }
+@media(max-width:1100px){
 
-    .btn {
-      border: none;
-      border-radius: 14px;
-      padding: 14px 24px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
+.dashboard{
+    grid-template-columns:1fr;
+}
 
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: white;
-      box-shadow: 0 0 25px rgba(0,229,255,0.35);
-    }
+.stats{
+    grid-template-columns:repeat(2,1fr);
+}
 
-    .btn-danger {
-      background: linear-gradient(135deg, #ff4d6d, #ff758f);
-      color: white;
-    }
+}
 
-    .btn:hover {
-      transform: translateY(-3px) scale(1.02);
-    }
+@media(max-width:768px){
 
-    .btn::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: rgba(255,255,255,0.15);
-      transition: 0.5s;
-    }
+.container{
+    padding:20px;
+}
 
-    .btn:hover::before {
-      left: 100%;
-    }
+.temp{
+    font-size:70px;
+}
 
-    .user-panel {
-      margin-top: 25px;
-    }
+.city{
+    font-size:32px;
+}
 
-    .user-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      padding: 14px 18px;
-      border-radius: 16px;
-      margin-bottom: 12px;
-    }
+.stats{
+    grid-template-columns:1fr;
+}
 
-    .status-online {
-      width: 10px;
-      height: 10px;
-      background: var(--success);
-      border-radius: 50%;
-      box-shadow: 0 0 10px var(--success);
-    }
+}
 
-    footer {
-      text-align: center;
-      margin-top: 40px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    @media (max-width: 1100px) {
-      .dashboard {
-        grid-template-columns: 1fr;
-      }
-
-      .stats {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .bottom-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .container {
-        padding: 20px;
-      }
-
-      .temp {
-        font-size: 70px;
-      }
-
-      .city {
-        font-size: 32px;
-      }
-
-      .hourly-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .stats {
-        grid-template-columns: 1fr;
-      }
-
-      .search-box {
-        width: 100%;
-      }
-
-      .search-box input {
-        width: 100%;
-      }
-    }
-  </style>
+</style>
 </head>
 <body>
 
-  <div class="container">
+<div class="container">
 
-    <div class="topbar">
-      <div>
-        <div class="logo">⚡ Neon Weather SaaS</div>
-      </div>
+<div class="topbar">
+<div class="logo">⚡ Premium Weather SaaS</div>
+</div>
 
-      <div class="search-box">
-        <input type="text" id="cityInput" placeholder="Search city..." />
-        <button onclick="searchWeather()">Search</button>
-      </div>
-    </div>
+<div class="dashboard">
 
-    <div class="dashboard">
+<div class="glass left">
 
-      <div class="weather-main glass-card">
+<div class="city" id="cityName">Riyadh</div>
+<div class="date" id="dateText"></div>
 
-        <div>
-          <div class="city" id="cityName">Riyadh</div>
-          <div class="date" id="currentDate">Monday, May 11</div>
-        </div>
+<div class="search-box">
+<input type="text" id="cityInput" placeholder="Search city">
+<button onclick="searchWeather()">Search</button>
+</div>
 
-        <div class="temperature">
-          <div>
-            <div class="temp" id="temperature">38°</div>
-            <div class="weather-type" id="weatherType">Sunny Sky</div>
-          </div>
+<div class="weather-main">
 
-          <div class="weather-icon" id="weatherIcon">☀️</div>
-        </div>
+<div>
+<div class="temp" id="temp">38°</div>
+<div class="weather-type" id="weatherType">Sunny</div>
+</div>
 
-        <div class="stats">
-          <div class="stat-box">
-            <div class="stat-title">Humidity</div>
-            <div class="stat-value" id="humidity">48%</div>
-          </div>
+<div class="weather-icon" id="weatherIcon">☀️</div>
 
-          <div class="stat-box">
-            <div class="stat-title">Wind</div>
-            <div class="stat-value" id="wind">12 km/h</div>
-          </div>
+</div>
 
-          <div class="stat-box">
-            <div class="stat-title">Pressure</div>
-            <div class="stat-value" id="pressure">1013</div>
-          </div>
+<div class="stats">
 
-          <div class="stat-box">
-            <div class="stat-title">Feels Like</div>
-            <div class="stat-value" id="feelsLike">40°</div>
-          </div>
-        </div>
+<div class="stat">
+<div class="stat-title">Humidity</div>
+<div class="stat-value" id="humidity">48%</div>
+</div>
 
-        <div class="bottom-grid">
+<div class="stat">
+<div class="stat-title">Wind</div>
+<div class="stat-value" id="wind">12 km/h</div>
+</div>
 
-          <div class="glass-card">
-            <div class="forecast-title">Hourly Forecast</div>
+<div class="stat">
+<div class="stat-title">Pressure</div>
+<div class="stat-value" id="pressure">1013</div>
+</div>
 
-            <div class="hourly-grid">
-              <div class="hour-box">
-                <div class="hour-time">09 AM</div>
-                <div>☀️</div>
-                <div class="hour-temp">35°</div>
-              </div>
+<div class="stat">
+<div class="stat-title">Feels Like</div>
+<div class="stat-value" id="feels">40°</div>
+</div>
 
-              <div class="hour-box">
-                <div class="hour-time">12 PM</div>
-                <div>🌤️</div>
-                <div class="hour-temp">38°</div>
-              </div>
+</div>
 
-              <div class="hour-box">
-                <div class="hour-time">03 PM</div>
-                <div>☀️</div>
-                <div class="hour-temp">40°</div>
-              </div>
+</div>
 
-              <div class="hour-box">
-                <div class="hour-time">06 PM</div>
-                <div>🌥️</div>
-                <div class="hour-temp">34°</div>
-              </div>
-            </div>
-          </div>
+<div class="glass right">
 
-          <div class="glass-card">
-            <div class="forecast-title">Authentication</div>
+<div class="section-title">5-Day Forecast</div>
 
-            <div class="auth-buttons">
-              <button class="btn btn-primary" onclick="loginUser()">Login</button>
-              <button class="btn btn-primary" onclick="registerUser()">Register</button>
-              <button class="btn btn-danger" onclick="logoutUser()">Logout</button>
-            </div>
+<div class="forecast">
 
-            <div class="user-panel">
-              <div class="user-item">
-                <div>
-                  <strong>Admin User</strong><br>
-                  <small>admin@weatherapp.com</small>
-                </div>
+<div class="forecast-item">
+<div>☀️ Tuesday</div>
+<div>39° / 30°</div>
+</div>
 
-                <div class="status-online"></div>
-              </div>
+<div class="forecast-item">
+<div>🌤 Wednesday</div>
+<div>36° / 28°</div>
+</div>
 
-              <div class="user-item">
-                <div>
-                  <strong>Premium User</strong><br>
-                  <small>premium@weatherapp.com</small>
-                </div>
+<div class="forecast-item">
+<div>🌧 Thursday</div>
+<div>31° / 24°</div>
+</div>
 
-                <div class="status-online"></div>
-              </div>
-            </div>
-          </div>
+<div class="forecast-item">
+<div>⛅ Friday</div>
+<div>33° / 25°</div>
+</div>
 
-        </div>
+<div class="forecast-item">
+<div>☀️ Saturday</div>
+<div>40° / 31°</div>
+</div>
 
-      </div>
+</div>
 
-      <div class="glass-card">
-        <div class="forecast-title">5-Day Forecast</div>
+<div class="auth-card">
 
-        <div class="forecast-list">
+<div class="section-title">Authentication</div>
 
-          <div class="forecast-item">
-            <div class="forecast-left">
-              <div>☀️</div>
-              <div>
-                <div class="forecast-day">Tuesday</div>
-                <small>Sunny</small>
-              </div>
-            </div>
+<div class="input-group">
+<input type="text" id="name" placeholder="Name">
+</div>
 
-            <div class="forecast-temp">39° / 30°</div>
-          </div>
+<div class="input-group">
+<input type="email" id="email" placeholder="Email">
+</div>
 
-          <div class="forecast-item">
-            <div class="forecast-left">
-              <div>🌤️</div>
-              <div>
-                <div class="forecast-day">Wednesday</div>
-                <small>Partly Cloudy</small>
-              </div>
-            </div>
+<div class="input-group">
+<input type="password" id="password" placeholder="Password">
+</div>
 
-            <div class="forecast-temp">36° / 28°</div>
-          </div>
+<div class="input-group">
+<input type="text" id="mobile" placeholder="Mobile">
+</div>
 
-          <div class="forecast-item">
-            <div class="forecast-left">
-              <div>🌧️</div>
-              <div>
-                <div class="forecast-day">Thursday</div>
-                <small>Rainy</small>
-              </div>
-            </div>
+<button class="btn btn-primary" onclick="registerUser()">
+Register
+</button>
 
-            <div class="forecast-temp">31° / 24°</div>
-          </div>
+<button class="btn btn-primary" onclick="loginUser()">
+Login
+</button>
 
-          <div class="forecast-item">
-            <div class="forecast-left">
-              <div>⛅</div>
-              <div>
-                <div class="forecast-day">Friday</div>
-                <small>Cloudy</small>
-              </div>
-            </div>
+<button class="btn btn-google" onclick="googleLogin()">
+Continue With Google
+</button>
 
-            <div class="forecast-temp">33° / 25°</div>
-          </div>
+<button class="btn btn-danger" onclick="logoutUser()">
+Logout
+</button>
 
-          <div class="forecast-item">
-            <div class="forecast-left">
-              <div>☀️</div>
-              <div>
-                <div class="forecast-day">Saturday</div>
-                <small>Sunny</small>
-              </div>
-            </div>
+<div class="user-box" id="userBox">
 
-            <div class="forecast-temp">40° / 31°</div>
-          </div>
+<img id="userImage" src="https://i.imgur.com/6VBx3io.png">
 
-        </div>
-      </div>
+<h3 id="userName">User</h3>
 
-    </div>
+<p id="userEmail"></p>
 
-    <footer>
-      Built with ⚡ Premium Neon UI • Responsive SaaS Dashboard
-    </footer>
+<p id="userRole"></p>
 
-  </div>
+<p id="userMobile"></p>
 
-  <script>
+</div>
 
-    const weatherData = {
-      Riyadh: {
-        temp: '38°',
-        type: 'Sunny Sky',
-        icon: '☀️',
-        humidity: '48%',
-        wind: '12 km/h',
-        pressure: '1013',
-        feels: '40°'
-      },
+</div>
 
-      Dubai: {
-        temp: '41°',
-        type: 'Hot & Clear',
-        icon: '🌤️',
-        humidity: '55%',
-        wind: '18 km/h',
-        pressure: '1010',
-        feels: '44°'
-      },
+</div>
 
-      London: {
-        temp: '19°',
-        type: 'Rainy',
-        icon: '🌧️',
-        humidity: '81%',
-        wind: '20 km/h',
-        pressure: '1007',
-        feels: '18°'
-      },
+</div>
 
-      NewYork: {
-        temp: '26°',
-        type: 'Cloudy',
-        icon: '⛅',
-        humidity: '65%',
-        wind: '10 km/h',
-        pressure: '1015',
-        feels: '27°'
-      }
-    };
+<footer>
+Built with Flask + SQLite + JWT + Google OAuth
+</footer>
 
-    function searchWeather() {
-      const city = document.getElementById('cityInput').value.trim();
+</div>
 
-      if (!city) {
-        alert('Please enter a city name');
-        return;
-      }
+<script>
 
-      const key = city.replace(/\s/g, '');
-      const data = weatherData[key] || weatherData['Riyadh'];
+const API_BASE = "https://api-project-e4fn.onrender.com";
 
-      document.getElementById('cityName').innerText = city;
-      document.getElementById('temperature').innerText = data.temp;
-      document.getElementById('weatherType').innerText = data.type;
-      document.getElementById('weatherIcon').innerText = data.icon;
-      document.getElementById('humidity').innerText = data.humidity;
-      document.getElementById('wind').innerText = data.wind;
-      document.getElementById('pressure').innerText = data.pressure;
-      document.getElementById('feelsLike').innerText = data.feels;
-    }
+const weatherData = {
 
-    function loginUser() {
-      alert('Login Successful ✅');
-    }
+Riyadh:{
+temp:"38°",
+type:"Sunny",
+icon:"☀️",
+humidity:"48%",
+wind:"12 km/h",
+pressure:"1013",
+feels:"40°"
+},
 
-    function registerUser() {
-      alert('Registration Completed 🚀');
-    }
+Dubai:{
+temp:"41°",
+type:"Hot & Clear",
+icon:"🌤️",
+humidity:"55%",
+wind:"18 km/h",
+pressure:"1010",
+feels:"44°"
+},
 
-    function logoutUser() {
-      alert('Logged Out ❌');
-    }
+London:{
+temp:"19°",
+type:"Rainy",
+icon:"🌧️",
+humidity:"81%",
+wind:"20 km/h",
+pressure:"1007",
+feels:"18°"
+}
 
-    const today = new Date();
+};
 
-    document.getElementById('currentDate').innerText =
-      today.toLocaleDateString('en-US', {
-        weekday: 'long',
-        month: 'long',
-        day: 'numeric'
-      });
+function searchWeather(){
 
-  </script>
+const city = document.getElementById("cityInput").value.trim();
+
+if(!city)return;
+
+const data = weatherData[city] || weatherData["Riyadh"];
+
+document.getElementById("cityName").innerText = city;
+document.getElementById("temp").innerText = data.temp;
+document.getElementById("weatherType").innerText = data.type;
+document.getElementById("weatherIcon").innerText = data.icon;
+document.getElementById("humidity").innerText = data.humidity;
+document.getElementById("wind").innerText = data.wind;
+document.getElementById("pressure").innerText = data.pressure;
+document.getElementById("feels").innerText = data.feels;
+
+}
+
+async function registerUser(){
+
+const name = document.getElementById("name").value;
+const email = document.getElementById("email").value;
+const password = document.getElementById("password").value;
+const mobile = document.getElementById("mobile").value;
+
+const res = await fetch(`${API_BASE}/register`,{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+name,
+email,
+password,
+mobile
+})
+
+});
+
+const data = await res.json();
+
+alert(data.message || data.error);
+
+}
+
+async function loginUser(){
+
+const email = document.getElementById("email").value;
+const password = document.getElementById("password").value;
+
+const res = await fetch(`${API_BASE}/login`,{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+email,
+password
+})
+
+});
+
+const data = await res.json();
+
+if(data.token){
+
+localStorage.setItem("token",data.token);
+
+loadCurrentUser();
+
+alert("Login Successful ✅");
+
+}else{
+
+alert(data.error || "Login Failed");
+
+}
+
+}
+
+function googleLogin(){
+
+window.location.href = `${API_BASE}/google_login`;
+
+}
+
+function logoutUser(){
+
+localStorage.removeItem("token");
+
+document.getElementById("userBox").style.display = "none";
+
+alert("Logged Out");
+
+}
+
+async function loadCurrentUser(){
+
+const token = localStorage.getItem("token");
+
+if(!token)return;
+
+const res = await fetch(`${API_BASE}/me`,{
+
+headers:{
+Authorization:`Bearer ${token}`
+}
+
+});
+
+const data = await res.json();
+
+document.getElementById("userBox").style.display = "block";
+
+document.getElementById("userName").innerText = data.name;
+document.getElementById("userEmail").innerText = data.email;
+document.getElementById("userRole").innerText = "Role: " + data.role;
+document.getElementById("userMobile").innerText = "Mobile: " + data.mobile;
+
+if(data.picture){
+
+document.getElementById("userImage").src = data.picture;
+
+}
+
+}
+
+const params = new URLSearchParams(window.location.search);
+
+const token = params.get("token");
+
+if(token){
+
+localStorage.setItem("token",token);
+
+window.history.replaceState({},document.title,"/");
+
+}
+
+loadCurrentUser();
+
+document.getElementById("dateText").innerText =
+new Date().toLocaleDateString('en-US',{
+weekday:'long',
+month:'long',
+day:'numeric'
+});
+
+</script>
 
 </body>
 </html>
-```
-
-## How to Use
-
-1. Open your existing `index.html`
-2. Remove old code
-3. Paste the full new code
-4. Save the file
-5. Open in browser
-
-## Next Upgrade Ideas
-
-* Connect real weather API
-* Add SQLite backend
-* User authentication database
-* Dark/light toggle
-* Live charts
-* Mobile app conversion
-* Electron desktop build
-* Admin dashboard
-* AI weather assist
