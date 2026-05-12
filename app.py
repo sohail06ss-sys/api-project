@@ -581,7 +581,7 @@ def ai_assistant():
             json={
 
                 "model":
-                "tencent/hunyuan-a13b-instruct:free",
+                "openrouter/free",
 
                 "messages":[
 
