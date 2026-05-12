@@ -218,35 +218,36 @@
 
         <!-- PROFILE -->
 
-        <div class="glass profile-card">
+        <!-- AI ASSISTANT -->
 
-            <h2>User Profile</h2>
+<div class="glass ai-card">
 
-            <img id="profileImage"
-                 src="https://i.imgur.com/6VBx3io.png">
+    <h2>AI Assistant</h2>
 
-            <h3 id="profileName">User</h3>
+    <p class="weather-subtitle">
+        Ask anything instantly
+    </p>
 
-            <p id="profileEmail"></p>
+    <textarea
+        id="aiPrompt"
+        placeholder="Ask AI anything..."></textarea>
 
-            <p id="profileRole"></p>
+    <button
+        onclick="askAI()"
+        class="btn primary">
 
-            <p id="profileMobile"></p>
+        Ask AI
 
-        </div>
+    </button>
+
+    <div id="aiResponse"
+         class="ai-response">
+
+        AI response will appear here...
 
     </div>
 
-    <!-- ADMIN PANEL -->
-
-    <div id="adminPanel"
-         class="glass admin-panel hidden">
-
-        <div class="admin-header">
-
-            <h2>User Management</h2>
-
-        </div>
+</div>
 
         <!-- ADMIN ACTIONS -->
 

@@ -467,7 +467,61 @@ async function searchWeather(){
         alert("Weather fetch failed");
     }
 }
+// ---------------- AI ASSISTANT ----------------
+
+async function askAI(){
+
+    const prompt =
+    document.getElementById("aiPrompt").value;
+
+    if(!prompt){
+
+        alert("Enter your question");
+        return;
+    }
+
+    const token =
+    localStorage.getItem("token");
+
+    const responseBox =
+    document.getElementById("aiResponse");
+
+    responseBox.innerHTML =
+    "Thinking...";
+
+    try{
+
+        const res = await fetch(
+            `${API_BASE}/ai`,
+            {
+
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json",
+                    Authorization:`Bearer ${token}`
+                },
+
+                body:JSON.stringify({
+                    prompt:prompt
+                })
+            }
+        );
+
+        const data = await res.json();
+
+        responseBox.innerHTML =
+        data.reply || data.error;
+
+    }catch(err){
+
+        responseBox.innerHTML =
+        "AI request failed";
+    }
+}
+
 // ---------------- LOGOUT ----------------
+
 function logoutUser(){
 
     // REMOVE JWT TOKEN
@@ -479,6 +533,7 @@ function logoutUser(){
     document.getElementById("profileImage")
     .src =
     "https://i.imgur.com/6VBx3io.png";
+
 
     // HIDE ADMIN PANEL
 
