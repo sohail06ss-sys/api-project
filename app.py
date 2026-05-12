@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, redirect, url_for, render_template
+from flask import Flask, request, jsonify, redirect, url_for, render_template, session
 from flask_cors import CORS
 import sqlite3
 import os
@@ -68,8 +68,6 @@ def init_db():
         role TEXT DEFAULT 'User'
     )
     """)
-
-    # SAFE ROLE COLUMN MIGRATION
 
     try:
 
@@ -180,8 +178,6 @@ def login():
             "error": "User not found"
         }), 401
 
-    # GOOGLE LOGIN ACCOUNT
-
     if user[3] is None:
 
         return jsonify({
@@ -291,6 +287,25 @@ def google_login():
 
         return f"Google Login Error: {str(e)}"
 
+# ---------------- GOOGLE LOGOUT ----------------
+
+@app.route('/google_logout')
+def google_logout():
+
+    try:
+
+        session.clear()
+
+        if "google_oauth_token" in session:
+
+            del session["google_oauth_token"]
+
+        return redirect("/")
+
+    except Exception as e:
+
+        return f"Logout Error: {str(e)}"
+
 # ---------------- CURRENT USER ----------------
 
 @app.route('/me')
@@ -385,31 +400,21 @@ def add_user():
 
     try:
 
-        # USER DETAILS
-
         name = data.get("name")
         email = data.get("email")
         mobile = data.get("mobile", "")
-
-        # PASSWORD
 
         password = data.get("password", "123456")
 
         hashed_password = generate_password_hash(password)
 
-        # ROLE
-
         role = data.get("role", "User")
-
-        # VALIDATION
 
         if not name or not email:
 
             return jsonify({
                 "error": "Missing required fields"
             }), 400
-
-        # INSERT USER
 
         cursor.execute(
             """
@@ -430,35 +435,23 @@ def add_user():
         conn.commit()
 
         return jsonify({
-
-            "message":
-            "User added successfully",
-
-            "default_password":
-            password
-
+            "message": "User added successfully",
+            "default_password": password
         })
 
     except sqlite3.IntegrityError:
 
         return jsonify({
-
-            "error":
-            "User already exists"
-
+            "error": "User already exists"
         }), 400
 
     except Exception as e:
 
         return jsonify({
-
-            "error":
-            str(e)
-
+            "error": str(e)
         }), 500
 
     finally:
-
         conn.close()
 
 # ---------------- DELETE USER ----------------
@@ -490,7 +483,7 @@ def update_user(id):
 
     data = request.get_json()
 
-    role = "Admin" if data['email'] == ADMIN_EMAIL else "User"
+    role = data.get("role", "User")
 
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
