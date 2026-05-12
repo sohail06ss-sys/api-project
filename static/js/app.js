@@ -4,20 +4,32 @@ const API_BASE = window.location.origin;
 
 function showDashboard(){
 
-    document.getElementById("authScreen")
-    .classList.add("hidden");
+    const auth =
+    document.getElementById("authScreen");
 
-    document.getElementById("dashboardScreen")
-    .classList.remove("hidden");
+    const dashboard =
+    document.getElementById("dashboardScreen");
+
+    auth.style.display = "none";
+
+    dashboard.style.display = "block";
+
+    dashboard.classList.remove("hidden");
 }
 
 function showAuth(){
 
-    document.getElementById("dashboardScreen")
-    .classList.add("hidden");
+    const auth =
+    document.getElementById("authScreen");
 
-    document.getElementById("authScreen")
-    .classList.remove("hidden");
+    const dashboard =
+    document.getElementById("dashboardScreen");
+
+    dashboard.style.display = "none";
+
+    auth.style.display = "flex";
+
+    auth.classList.remove("hidden");
 }
 
 // ---------------- REGISTER ----------------
@@ -125,33 +137,60 @@ async function loadCurrentUser(){
 
     const user = await res.json();
 
-    document.getElementById("currentUser")
-    .innerText = user.name;
+    const currentUser =
+    document.getElementById("currentUser");
 
-    document.getElementById("profileName")
-    .innerText = user.name;
+    if(currentUser){
+        currentUser.innerText = user.name;
+    }
 
-    document.getElementById("profileEmail")
-    .innerText = user.email;
+    const profileName =
+    document.getElementById("profileName");
 
-    document.getElementById("profileRole")
-    .innerText = `Role: ${user.role}`;
+    if(profileName){
+        profileName.innerText = user.name;
+    }
 
-    document.getElementById("profileMobile")
-    .innerText = `Mobile: ${user.mobile}`;
+    const profileEmail =
+    document.getElementById("profileEmail");
+
+    if(profileEmail){
+        profileEmail.innerText = user.email;
+    }
+
+    const profileRole =
+    document.getElementById("profileRole");
+
+    if(profileRole){
+        profileRole.innerText = `Role: ${user.role}`;
+    }
+
+    const profileMobile =
+    document.getElementById("profileMobile");
+
+    if(profileMobile){
+        profileMobile.innerText =
+        `Mobile: ${user.mobile}`;
+    }
 
     if(user.picture){
 
-        document.getElementById("profileImage")
-        .src = user.picture;
-    }
+        const profileImage =
+        document.getElementById("profileImage");
 
-    // ADMIN PANEL
+        if(profileImage){
+            profileImage.src = user.picture;
+        }
+    }
 
     if(user.role === "Admin"){
 
-        document.getElementById("adminPanel")
-        .classList.remove("hidden");
+        const adminPanel =
+        document.getElementById("adminPanel");
+
+        if(adminPanel){
+            adminPanel.classList.remove("hidden");
+        }
 
         loadUsers();
     }
@@ -178,6 +217,8 @@ async function loadUsers(){
     const table =
     document.getElementById("usersTable");
 
+    if(!table) return;
+
     table.innerHTML = "";
 
     users.forEach(user => {
@@ -189,19 +230,15 @@ async function loadUsers(){
             <td>${user.id}</td>
 
             <td>
-
                 <input
                     value="${user.name}"
                     id="name-${user.id}">
-
             </td>
 
             <td>
-
                 <input
                     value="${user.email}"
                     id="email-${user.id}">
-
             </td>
 
             <td>
@@ -229,11 +266,9 @@ async function loadUsers(){
             </td>
 
             <td>
-
                 <input
                     value="${user.mobile}"
                     id="mobile-${user.id}">
-
             </td>
 
             <td>
@@ -374,8 +409,6 @@ async function searchWeather(){
         const current =
         data.current_condition[0];
 
-        // MAIN WEATHER
-
         document.getElementById("temp")
         .innerText =
         `${current.temp_C}°`;
@@ -387,8 +420,6 @@ async function searchWeather(){
         document.getElementById("feelsLike")
         .innerText =
         `Feels Like: ${current.FeelsLikeC}°`;
-
-        // WEATHER DETAILS
 
         document.getElementById("humidity")
         .innerText =
@@ -405,8 +436,6 @@ async function searchWeather(){
         document.getElementById("visibility")
         .innerText =
         `${current.visibility} km`;
-
-        // ICON
 
         const condition =
         current.weatherDesc[0].value.toLowerCase();
@@ -429,8 +458,6 @@ async function searchWeather(){
         document.getElementById("weatherIcon")
         .innerText = icon;
 
-        // FORECAST
-
         const forecastContainer =
         document.getElementById("forecastContainer");
 
@@ -442,17 +469,11 @@ async function searchWeather(){
 
             <div class="forecast-card">
 
-                <h4>
-                    ${day.date}
-                </h4>
+                <h4>${day.date}</h4>
 
-                <p>
-                    🌡 ${day.avgtempC}°
-                </p>
+                <p>🌡 ${day.avgtempC}°</p>
 
-                <p>
-                    💧 ${day.hourly[0].humidity}%
-                </p>
+                <p>💧 ${day.hourly[0].humidity}%</p>
 
                 <p>
                     ${day.hourly[0].weatherDesc[0].value}
@@ -467,6 +488,7 @@ async function searchWeather(){
         alert("Weather fetch failed");
     }
 }
+
 // ---------------- AI ASSISTANT ----------------
 
 async function askAI(){
@@ -524,35 +546,31 @@ async function askAI(){
 
 function logoutUser(){
 
-    // REMOVE JWT TOKEN
-
     localStorage.removeItem("token");
 
-    // RESET PROFILE IMAGE
+    const profileImage =
+    document.getElementById("profileImage");
 
-    document.getElementById("profileImage")
-    .src =
-    "https://i.imgur.com/6VBx3io.png";
+    if(profileImage){
 
+        profileImage.src =
+        "https://i.imgur.com/6VBx3io.png";
+    }
 
-    // HIDE ADMIN PANEL
+    const adminPanel =
+    document.getElementById("adminPanel");
 
-    document.getElementById("adminPanel")
-    .classList.add("hidden");
-
-    // SHOW AUTH SCREEN
+    if(adminPanel){
+        adminPanel.classList.add("hidden");
+    }
 
     showAuth();
-
-    // CLEAR URL
 
     window.history.replaceState(
         {},
         document.title,
         "/"
     );
-
-    // FORCE GOOGLE SESSION LOGOUT
 
     window.location.href =
     `${API_BASE}/google_logout`;
