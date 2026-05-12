@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, redirect, url_for, render_template, s
 from flask_cors import CORS
 import sqlite3
 import os
+import requests
 
 from flask_jwt_extended import (
     JWTManager,
@@ -540,6 +541,66 @@ def update_mobile():
     return jsonify({
         "message": "Mobile updated successfully"
     })
+
+# ---------------- AI ASSISTANT ----------------
+
+@app.route('/ai', methods=['POST'])
+@jwt_required()
+def ai_assistant():
+
+    try:
+
+        data = request.get_json()
+
+        prompt = data.get("prompt")
+
+        api_key = os.environ.get(
+            "OPENROUTER_API_KEY"
+        )
+
+        response = requests.post(
+
+            url="https://openrouter.ai/api/v1/chat/completions",
+
+            headers={
+
+                "Authorization":
+                f"Bearer {api_key}",
+
+                "Content-Type":
+                "application/json"
+            },
+
+            json={
+
+                "model":
+                "openai/gpt-3.5-turbo",
+
+                "messages":[
+
+                    {
+                        "role":"user",
+                        "content":prompt
+                    }
+                ]
+            }
+        )
+
+        result = response.json()
+
+        message = result["choices"][0]["message"]["content"]
+
+        return jsonify({
+
+            "reply": message
+        })
+
+    except Exception as e:
+
+        return jsonify({
+
+            "error": str(e)
+        }), 500
 
 # ---------------- RUN ----------------
 

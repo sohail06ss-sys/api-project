@@ -3,3 +3,4 @@ flask-cors
 gunicorn
 flask-jwt-extended
 flask-dance
+requests
