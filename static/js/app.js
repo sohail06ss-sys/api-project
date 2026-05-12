@@ -374,6 +374,8 @@ async function searchWeather(){
         const current =
         data.current_condition[0];
 
+        // MAIN WEATHER
+
         document.getElementById("temp")
         .innerText =
         `${current.temp_C}°`;
@@ -381,6 +383,28 @@ async function searchWeather(){
         document.getElementById("weatherType")
         .innerText =
         current.weatherDesc[0].value;
+
+        document.getElementById("feelsLike")
+        .innerText =
+        `Feels Like: ${current.FeelsLikeC}°`;
+
+        // WEATHER DETAILS
+
+        document.getElementById("humidity")
+        .innerText =
+        `${current.humidity}%`;
+
+        document.getElementById("windSpeed")
+        .innerText =
+        `${current.windspeedKmph} km/h`;
+
+        document.getElementById("pressure")
+        .innerText =
+        `${current.pressure} mb`;
+
+        document.getElementById("visibility")
+        .innerText =
+        `${current.visibility} km`;
 
         // ICON
 
@@ -398,36 +422,85 @@ async function searchWeather(){
         else if(condition.includes("snow")){
             icon = "❄️";
         }
+        else if(condition.includes("storm")){
+            icon = "⛈️";
+        }
 
         document.getElementById("weatherIcon")
         .innerText = icon;
+
+        // FORECAST
+
+        const forecastContainer =
+        document.getElementById("forecastContainer");
+
+        forecastContainer.innerHTML = "";
+
+        data.weather.forEach(day => {
+
+            forecastContainer.innerHTML += `
+
+            <div class="forecast-card">
+
+                <h4>
+                    ${day.date}
+                </h4>
+
+                <p>
+                    🌡 ${day.avgtempC}°
+                </p>
+
+                <p>
+                    💧 ${day.hourly[0].humidity}%
+                </p>
+
+                <p>
+                    ${day.hourly[0].weatherDesc[0].value}
+                </p>
+
+            </div>
+            `;
+        });
 
     }catch(err){
 
         alert("Weather fetch failed");
     }
 }
-
 // ---------------- LOGOUT ----------------
-
 function logoutUser(){
 
+    // REMOVE JWT TOKEN
+
     localStorage.removeItem("token");
+
+    // RESET PROFILE IMAGE
 
     document.getElementById("profileImage")
     .src =
     "https://i.imgur.com/6VBx3io.png";
 
+    // HIDE ADMIN PANEL
+
     document.getElementById("adminPanel")
     .classList.add("hidden");
 
+    // SHOW AUTH SCREEN
+
     showAuth();
+
+    // CLEAR URL
 
     window.history.replaceState(
         {},
         document.title,
         "/"
     );
+
+    // FORCE GOOGLE SESSION LOGOUT
+
+    window.location.href =
+    `${API_BASE}/google_logout`;
 }
 
 // ---------------- FORGOT PASSWORD ----------------
