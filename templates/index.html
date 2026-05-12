@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
@@ -81,52 +82,139 @@
 
         <!-- WEATHER -->
 
-<div class="glass weather-card">
+        <div class="glass weather-card">
 
-    <h2>Weather Dashboard</h2>
+            <div class="weather-header">
 
-    <div class="weather-search">
+                <div>
 
-        <input
-            type="text"
-            id="cityInput"
-            placeholder="Enter city name">
+                    <h2>Weather Dashboard</h2>
 
-        <button
-            onclick="searchWeather()"
-            class="btn primary">
+                    <p class="weather-subtitle">
+                        Real-time climate insights
+                    </p>
 
-            Search
+                </div>
 
-        </button>
+                <div class="weather-live">
+                    LIVE
+                </div>
 
-    </div>
-
-    <div class="weather-main">
-
-        <div>
-
-            <div id="temp" class="temp">
-                --
             </div>
 
-            <div id="weatherType">
-                Search weather
+            <!-- SEARCH -->
+
+            <div class="weather-search">
+
+                <input
+                    type="text"
+                    id="cityInput"
+                    placeholder="Enter city name">
+
+                <button
+                    onclick="searchWeather()"
+                    class="btn primary">
+
+                    Search
+
+                </button>
+
+            </div>
+
+            <!-- MAIN WEATHER -->
+
+            <div class="weather-main">
+
+                <div class="weather-left">
+
+                    <div id="temp" class="temp">
+                        --
+                    </div>
+
+                    <div id="weatherType" class="weather-type">
+                        Search weather
+                    </div>
+
+                    <div id="feelsLike" class="weather-small">
+                        Feels Like: --
+                    </div>
+
+                </div>
+
+                <div class="weather-right">
+
+                    <div
+                        class="weather-icon"
+                        id="weatherIcon">
+
+                        🌤️
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- WEATHER STATS -->
+
+            <div class="weather-stats">
+
+                <div class="weather-box">
+
+                    <span>💧 Humidity</span>
+
+                    <h3 id="humidity">
+                        --
+                    </h3>
+
+                </div>
+
+                <div class="weather-box">
+
+                    <span>🌬 Wind</span>
+
+                    <h3 id="windSpeed">
+                        --
+                    </h3>
+
+                </div>
+
+                <div class="weather-box">
+
+                    <span>📈 Pressure</span>
+
+                    <h3 id="pressure">
+                        --
+                    </h3>
+
+                </div>
+
+                <div class="weather-box">
+
+                    <span>👁 Visibility</span>
+
+                    <h3 id="visibility">
+                        --
+                    </h3>
+
+                </div>
+
+            </div>
+
+            <!-- FORECAST -->
+
+            <div class="forecast-section">
+
+                <h3>7-Day Forecast</h3>
+
+                <div id="forecastContainer"
+                     class="forecast-grid">
+
+                </div>
+
             </div>
 
         </div>
-
-        <div
-            class="weather-icon"
-            id="weatherIcon">
-
-            🌤️
-
-        </div>
-
-    </div>
-
-</div>
 
         <!-- PROFILE -->
 
@@ -160,70 +248,56 @@
 
         </div>
 
-       <!-- ADMIN ACTIONS -->
+        <!-- ADMIN ACTIONS -->
 
-<div class="admin-actions">
+        <div class="admin-actions">
 
-    <button
-        onclick="loadUsers()"
-        class="btn primary small">
+            <button
+                onclick="loadUsers()"
+                class="btn primary small">
 
-        Load Users
+                Load Users
 
-    </button>
+            </button>
 
-</div>
+        </div>
 
-<!-- ADMIN ACTIONS -->
+        <!-- ADD USER -->
 
-<div class="admin-actions">
+        <div class="add-user-grid">
 
-    <button
-        onclick="loadUsers()"
-        class="btn primary small">
+            <input type="text"
+                   id="newUserName"
+                   placeholder="Name">
 
-        Load Users
+            <input type="email"
+                   id="newUserEmail"
+                   placeholder="Email">
 
-    </button>
+            <input type="text"
+                   id="newUserMobile"
+                   placeholder="Mobile">
 
-</div>
+            <select id="newUserRole">
 
-<!-- ADD USER -->
+                <option value="User">
+                    User
+                </option>
 
-<div class="add-user-grid">
+                <option value="Admin">
+                    Admin
+                </option>
 
-    <input type="text"
-           id="newUserName"
-           placeholder="Name">
+            </select>
 
-    <input type="email"
-           id="newUserEmail"
-           placeholder="Email">
+            <button onclick="addUser()"
+                    class="btn primary">
 
-    <input type="text"
-           id="newUserMobile"
-           placeholder="Mobile">
+                Add User
 
-    <select id="newUserRole">
+            </button>
 
-        <option value="User">
-            User
-        </option>
-
-        <option value="Admin">
-            Admin
-        </option>
-
-    </select>
-
-    <button onclick="addUser()"
-            class="btn primary">
-
-        Add User
-
-    </button>
-
-</div>
+        </div>
 
         <!-- USERS TABLE -->
 
@@ -238,7 +312,6 @@
                     <th>Email</th>
                     <th>Role</th>
                     <th>Mobile</th>
-                    <th>Role</th>
                     <th>Action</th>
 
                 </tr>
