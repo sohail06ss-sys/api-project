@@ -511,6 +511,7 @@ def update_user(id):
     })
 
 # ---------------- UPDATE MOBILE ----------------
+# ---------------- UPDATE MOBILE ----------------
 
 @app.route('/update_mobile', methods=['POST'])
 @jwt_required()
@@ -541,6 +542,25 @@ def update_mobile():
         "message": "Mobile updated successfully"
     })
 
+# ---------------- GOOGLE LOGOUT ----------------
+
+@app.route('/google_logout')
+def google_logout():
+
+    try:
+
+        session.clear()
+
+        if "google_oauth_token" in session:
+
+            del session["google_oauth_token"]
+
+        return redirect("/")
+
+    except Exception as e:
+
+        return f"Logout Error: {str(e)}"
+
 # ---------------- RUN ----------------
 
 if __name__ == "__main__":
@@ -549,3 +569,4 @@ if __name__ == "__main__":
         host="0.0.0.0",
         port=int(os.environ.get("PORT", 5000))
     )
+
