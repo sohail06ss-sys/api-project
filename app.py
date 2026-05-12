@@ -581,7 +581,7 @@ def ai_assistant():
             json={
 
                 "model":
-                "meta-llama/llama-3.1-8b-instruct:free",
+                "mistralai/mistral-7b-instruct:free",
 
                 "messages":[
 
