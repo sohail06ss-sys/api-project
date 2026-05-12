@@ -581,15 +581,25 @@ def ai_assistant():
             json={
 
                 "model":
-                "openai/gpt-3.5-turbo",
+                "deepseek/deepseek-chat-v3-0324:free",
 
                 "messages":[
+
+                    {
+                        "role":"system",
+                        "content":
+                        "You are an advanced AI SaaS assistant that gives detailed, professional, accurate, and useful answers."
+                    },
 
                     {
                         "role":"user",
                         "content":prompt
                     }
-                ]
+                ],
+
+                "max_tokens":1000,
+
+                "temperature":0.7
             }
         )
 
@@ -608,7 +618,6 @@ def ai_assistant():
 
             "error": str(e)
         }), 500
-
 # ---------------- RUN ----------------
 
 if __name__ == "__main__":
