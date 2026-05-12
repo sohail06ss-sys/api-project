@@ -581,7 +581,7 @@ def ai_assistant():
             json={
 
                 "model":
-                "mistralai/mistral-7b-instruct:free",
+                "tencent/hunyuan-a13b-instruct:free",
 
                 "messages":[
 
