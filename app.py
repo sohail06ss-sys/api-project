@@ -278,10 +278,17 @@ def google_login():
         conn.commit()
         conn.close()
 
-        token = create_access_token(identity=email)
+        token = create_access_token(
+            identity=email
+        )
+
+        frontend_url = url_for(
+            "home",
+            _external=True
+        )
 
         return redirect(
-            f"https://api-project-e4fn.onrender.com/?token={token}"
+            f"{frontend_url}?token={token}"
         )
 
     except Exception as e:
