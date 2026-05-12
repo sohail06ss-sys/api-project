@@ -603,7 +603,22 @@ def ai_assistant():
             }
         )
 
-        result = response.json()
+               result = response.json()
+
+        print(result)
+
+        if "choices" not in result:
+
+            return jsonify({
+
+                "error":
+                result.get(
+                    "error",
+                    {}).get(
+                        "message",
+                        "AI response failed"
+                    )
+            }), 500
 
         message = result["choices"][0]["message"]["content"]
 
