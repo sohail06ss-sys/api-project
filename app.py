@@ -603,7 +603,7 @@ def ai_assistant():
             }
         )
 
-               result = response.json()
+        result = response.json()
 
         print(result)
 
